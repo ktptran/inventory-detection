@@ -9,7 +9,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { signIn } from 'aws-amplify/auth';
+import { signIn, signOut } from 'aws-amplify/auth';
 import { useNavigate } from 'react-router-dom';
 
 function Copyright(props) {
@@ -36,7 +36,7 @@ export default function SignIn(props) {
     const username = data.get('username');
     const password = data.get('password');
     try {
-      // await signOut({ global: true });
+      await signOut({ global: true });
       const user = await signIn({ username, password });
       setUser(user);
       navigate('/home');

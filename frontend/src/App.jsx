@@ -9,6 +9,7 @@ import Drawer from './components/Drawer';
 import Home from './pages/Home';
 import NoMatch from './pages/NoMatch';
 import Login from './pages/Login';
+import Inventory from './pages/Inventory';
 
 function App() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -23,6 +24,7 @@ function App() {
         <Routes>
           <Route path="/home" element={user ? <Home /> : <Navigate to="/login" replace />} />
           <Route path="/login" element={<Login setUser={setUser} />} />
+          <Route path="/inventory" element={<Inventory />} />
           <Route path="*" element={<NoMatch />} />
         </Routes>
         {user && <Footer />}
