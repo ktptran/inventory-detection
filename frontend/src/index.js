@@ -6,14 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { Amplify } from 'aws-amplify';
 import { AMPLIFY_CONFIG } from './aws-exports';
 
-Amplify.configure({
-  Auth: {
-    identityPoolId: AMPLIFY_CONFIG['Auth']['identityPoolId'],
-    region: AMPLIFY_CONFIG['Auth']['region'],
-    userPoolId: AMPLIFY_CONFIG['Auth']['userPoolId'],
-    userPoolWebClientId: AMPLIFY_CONFIG['Auth']['userPoolWebClientId'],
-  },
-});
+Amplify.configure(AMPLIFY_CONFIG);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
