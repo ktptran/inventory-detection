@@ -8,6 +8,7 @@ import Drawer from './components/Drawer';
 
 import Home from './pages/Home';
 import NoMatch from './pages/NoMatch';
+import Login from './pages/Login';
 
 function App() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -20,6 +21,7 @@ function App() {
         <Drawer setIsDrawerOpen={setIsDrawerOpen} isDrawerOpen={isDrawerOpen} />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
           <Route path="*" element={<NoMatch />} />
         </Routes>
         <Footer />
