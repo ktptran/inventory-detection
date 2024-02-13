@@ -3,6 +3,12 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import { Link } from 'react-router-dom';
+
+const linkStyle = {
+  textDecoration: 'none',
+  color: 'black',
+};
 
 function MuiDrawer({ isDrawerOpen, setIsDrawerOpen }) {
   return (
@@ -22,11 +28,15 @@ function MuiDrawer({ isDrawerOpen, setIsDrawerOpen }) {
           <Divider />
         </Box>
         {/* Routing */}
-        <Button color="inherit" href="/home">
-          Home
+        <Button color="inherit" onClick={() => setIsDrawerOpen(false)}>
+          <Link to="/home" style={linkStyle}>
+            Home
+          </Link>
         </Button>
-        <Button color="inherit" href="/inventory">
-          Inventory
+        <Button color="inherit" onClick={() => setIsDrawerOpen(false)}>
+          <Link to="/inventory" style={linkStyle}>
+            Inventory
+          </Link>
         </Button>
       </Drawer>
     </>
