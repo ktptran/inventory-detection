@@ -72,25 +72,16 @@ function Inventory() {
 
   return (
     <Grid container spacing={2}>
-      <Description />
-      <Photo selectedTime={selectedTime} />
-      <Grid item xs={6}>
-        <div style={{ padding: '20px' }}>
-          <div className="flex-center" style={{ paddingBottom: '25px' }}>
-            <DataTable data={data} selectedTime={selectedTime} />
-          </div>
-          <div className="flex-center">
-            <FruitChart data={data} />
-          </div>
-        </div>
-      </Grid>
+      {data && <Description data={data} />}
+      <Grid item xs={1}></Grid>
+      {data && <Photo selectedTime={selectedTime} data={data} />}
     </Grid>
   );
 }
 
-function Description() {
+function Description({ data }) {
   return (
-    <Grid item xs={4}>
+    <Grid item xs={5}>
       <div style={{ paddingLeft: '50px' }}>
         <h2>Inventory</h2>
         <p>This page includes a photo, table, and graph.</p>
@@ -99,18 +90,33 @@ function Description() {
           at that time.
         </p>
       </div>
+      <div style={{ padding: '20px' }}>
+        <LineChart width={500} height={300} data={data}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Line type="monotone" dataKey="apple" stroke="blue" />
+          <Line type="monotone" dataKey="orange" stroke="green" />
+          <Line type="monotone" dataKey="banana" stroke="red" />
+        </LineChart>
+      </div>
     </Grid>
   );
 }
 
-function Photo({ selectedTime }) {
-  const [photoLabel, setPhotoLabel] = useState('Latest Photo');
+function Photo({ selectedTime, data }) {
+  const [photoLabel, setPhotoLabel] = useState('Latest Entry');
 
   return (
-    <Grid item xs={2}>
-      <h2 className="flex-center">{photoLabel}</h2>
-      <div className="flex-center">
-        <img src={Refrigerator} alt="latest" style={{ width: '150px', height: '300px' }} />
+    <Grid item xs={6}>
+      <div>
+        <h2>{photoLabel}</h2>
+        <div style={{ display: 'flex', justifyContent: 'space-between', paddingRight: '50px' }}>
+          <DataTable data={data} selectedTime={selectedTime} />
+          <img src={Refrigerator} alt="latest" style={{ width: '200px', height: '400px' }} />
+        </div>
       </div>
     </Grid>
   );
@@ -118,12 +124,12 @@ function Photo({ selectedTime }) {
 
 function DataTable({ data, selectedTime }) {
   return (
-    <TableContainer component={Paper} style={{ width: '450px', transform: 'translateX(25px)' }}>
+    <TableContainer component={Paper} style={{ width: '450px' }}>
       <Table>
         <TableHead>
           <TableRow>
             <TableCell>Fruit</TableCell>
-            <TableCell align="right">Calories</TableCell>
+            <TableCell align="right">Count</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -138,25 +144,6 @@ function DataTable({ data, selectedTime }) {
         </TableBody>
       </Table>
     </TableContainer>
-  );
-}
-
-function FruitChart({ data }) {
-  return (
-    <>
-      {data && (
-        <LineChart width={500} height={300} data={data}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Line type="monotone" dataKey="apple" stroke="blue" />
-          <Line type="monotone" dataKey="orange" stroke="green" />
-          <Line type="monotone" dataKey="banana" stroke="red" />
-        </LineChart>
-      )}
-    </>
   );
 }
 

@@ -7,12 +7,13 @@ import banana from '../assets/banana.png';
 import door from '../assets/refrigerator-door.png';
 
 import { useDraggable } from 'use-draggable';
-import { useScreenshot, createFileName } from 'use-react-screenshot';
+import { useScreenshot } from 'use-react-screenshot';
+import { Link } from 'react-router-dom';
 
 function Home() {
   const refrigeratorRef = createRef(null);
-  // eslint-disable-next-line
-  const [image, takeScreenshot] = useScreenshot({
+  // eslint-disable-next-line no-unused-vars
+  const [_, takeScreenshot] = useScreenshot({
     type: 'image/jpeg',
     quality: 1.0,
   });
@@ -52,7 +53,7 @@ function Directions() {
         <p>Once you close the refrigerator, a snapshot will be recorded.</p>
         <p>This refrigerator records down the number of apples, oranges, and bananas.</p>
         <p>
-          Once you've taken a few snapshots, navigate to the <a href="/inventory">inventory page</a> to look at the
+          Once you've taken a few snapshots, navigate to the <Link to="/inventory">inventory page</Link> to look at the
           historical average.
         </p>
       </div>
