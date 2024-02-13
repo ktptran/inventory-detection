@@ -31,3 +31,16 @@
   /*prespectiv creates the door open effect*/
   transform: perspective(2000px) translateZ(0px) translateX(200px) translateY(200px) rotateY(-105deg);
 }
+
+.container {
+  height: 50vh;
+  position: relative;
+}
+
+.vertical-center {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}

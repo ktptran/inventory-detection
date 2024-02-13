@@ -30,8 +30,8 @@ function MuiDrawer({ isDrawerOpen, setIsDrawerOpen }) {
         <Button color="inherit" href="/">
           Home
         </Button>
-        <Button color="inherit" href="/about">
-          About
+        <Button color="inherit" href="/inventory">
+          Inventory
         </Button>
       </Drawer>
     </>

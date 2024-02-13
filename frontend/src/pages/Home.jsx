@@ -1,4 +1,5 @@
 import React, { useRef, useState, createRef } from 'react';
+import Grid from '@mui/material/Grid';
 
 import apple from '../assets/apple.png';
 import orange from '../assets/orange.png';
@@ -10,6 +11,7 @@ import { useScreenshot, createFileName } from 'use-react-screenshot';
 
 function Home() {
   const refrigeratorRef = createRef(null);
+  // eslint-disable-next-line
   const [image, takeScreenshot] = useScreenshot({
     type: 'image/jpeg',
     quality: 1.0,
@@ -28,23 +30,31 @@ function Home() {
   };
 
   return (
-    <>
-      <Directions />
-      <Door downloadScreenShot={downloadScreenShot} />
-      <Refrigerator refrigeratorRef={refrigeratorRef} />
-    </>
+    <Grid container spacing={2}>
+      <Grid item xs={6}>
+        <Door downloadScreenShot={downloadScreenShot} />
+        <Refrigerator refrigeratorRef={refrigeratorRef} />
+      </Grid>
+      <Grid item xs={6}>
+        <Directions />
+      </Grid>
+    </Grid>
   );
 }
 
 function Directions() {
   return (
-    <div style={{ padding: 20 }}>
-      <h2>Welcome to the Refrigerator Inventory Detection Demo!</h2>
-      <p>Open the refrigerator and move the items in and out.</p>
-      <p>Once you close the refrigerator, a snapshot will be recorded to count the inventory.</p>
-      <p>
-        Navigate to the <a href="/inventory">inventory page</a> for more information.
-      </p>
+    <div className="container">
+      <div className="vertical-center">
+        <h2>Welcome to the Refrigerator Inventory Detection Demo!</h2>
+        <p>Open the refrigerator and move the items in and out.</p>
+        <p>Once you close the refrigerator, a snapshot will be recorded.</p>
+        <p>This refrigerator records down the number of apples, oranges, and bananas.</p>
+        <p>
+          Once you've taken a few snapshots, navigate to the <a href="/inventory">inventory page</a> to look at the
+          historical average.
+        </p>
+      </div>
     </div>
   );
 }
