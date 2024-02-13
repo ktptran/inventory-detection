@@ -49,7 +49,7 @@ function AccountMenu({ setUser }) {
   const navigate = useNavigate();
   const handleSignOut = async () => {
     try {
-      await signOut({ global: true });
+      await signOut();
       setUser(null);
       navigate('/login');
     } catch (error) {

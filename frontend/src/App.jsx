@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Route, Routes, BrowserRouter as Router, Navigate } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 
@@ -12,6 +12,7 @@ import Login from './pages/Login';
 import Inventory from './pages/Inventory';
 
 import { UserContext } from './context/UserContext';
+import { fetchAuthSession } from 'aws-amplify/auth';
 
 function App() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -27,8 +28,8 @@ function App() {
         <Drawer setIsDrawerOpen={setIsDrawerOpen} isDrawerOpen={isDrawerOpen} />
         <Routes>
           <Route path="/home" element={user ? <Home /> : <Navigate to="/login" replace />} />
-          <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/inventory" element={user ? <Inventory /> : <Navigate to="/login" replace />} />
+          <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="*" element={<NoMatch />} />
         </Routes>
         {user && <Footer />}

@@ -37,7 +37,7 @@ export default function SignIn(props) {
     const username = data.get('username');
     const password = data.get('password');
     try {
-      await signOut({ global: true });
+      await signOut();
       const user = await signIn({ username, password });
       setUser(user);
       navigate('/home');
