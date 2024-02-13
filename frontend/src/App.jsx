@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Route, Routes, BrowserRouter as Router, Navigate } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 
@@ -12,7 +12,6 @@ import Login from './pages/Login';
 import Inventory from './pages/Inventory';
 
 import { UserContext } from './context/UserContext';
-import { fetchAuthSession } from 'aws-amplify/auth';
 
 function App() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
