@@ -10,61 +10,10 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import Refrigerator from '../assets/example_image.jpg';
-
-const initialData = [
-  {
-    name: '15:00',
-    orange: 4,
-    banana: 2,
-    apple: 2,
-  },
-  {
-    name: '16:00',
-    orange: 3,
-    banana: 1,
-    apple: 2,
-  },
-  {
-    name: '17:00',
-    orange: 2,
-    banana: 9,
-    apple: 2,
-  },
-  {
-    name: '18:00',
-    orange: 2,
-    banana: 3,
-    apple: 2,
-  },
-  {
-    name: '19:00',
-    orange: 1,
-    banana: 4,
-    apple: 2,
-  },
-  {
-    name: '20:00',
-    orange: 2,
-    banana: 3,
-    apple: 2,
-  },
-  {
-    name: '21:00',
-    orange: 3,
-    banana: 4,
-    apple: 2,
-  },
-];
-const latestEntry = [
-  { name: 'Banana', count: 1 },
-  { name: 'Apple', count: 2 },
-  { name: 'Orange', count: 3 },
-];
+import SampleData from '../data/sampleData.json';
 
 function Inventory() {
   const [data, setData] = useState(null);
-
-  // Latest values
   const [entryValue, setEntryValue] = useState(null);
   const [entryLabel, setEntryLabel] = useState('Latest Entry');
 
@@ -76,19 +25,17 @@ function Inventory() {
       { name: 'Orange', count: value['orange'] },
     ]);
     setEntryLabel(value['name']);
-    // TODO: Pulled updated img
   };
 
   const refreshData = () => {
     setEntryLabel('Latest Entry');
-    setEntryValue(latestEntry);
+    setEntryValue(SampleData['latestEntrySample']);
   };
 
   useEffect(() => {
-    // TODO: Backend function to pull in data
     if (data === null) {
-      setEntryValue(latestEntry);
-      setData(initialData);
+      setEntryValue(SampleData['latestEntrySample']);
+      setData(SampleData['initialRecordData']);
     }
   }, [data]);
 

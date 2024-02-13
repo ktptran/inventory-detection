@@ -1,0 +1,51 @@
+{
+  "initialRecordData": [
+    {
+      "name": "15:00",
+      "orange": 4,
+      "banana": 2,
+      "apple": 2
+    },
+    {
+      "name": "16:00",
+      "orange": 3,
+      "banana": 1,
+      "apple": 2
+    },
+    {
+      "name": "17:00",
+      "orange": 2,
+      "banana": 9,
+      "apple": 2
+    },
+    {
+      "name": "18:00",
+      "orange": 2,
+      "banana": 3,
+      "apple": 2
+    },
+    {
+      "name": "19:00",
+      "orange": 1,
+      "banana": 4,
+      "apple": 2
+    },
+    {
+      "name": "20:00",
+      "orange": 2,
+      "banana": 3,
+      "apple": 2
+    },
+    {
+      "name": "21:00",
+      "orange": 3,
+      "banana": 4,
+      "apple": 2
+    }
+  ],
+  "latestEntrySample": [
+    { "name": "Banana", "count": 1 },
+    { "name": "Apple", "count": 2 },
+    { "name": "Orange", "count": 3 }
+  ]
+}
