@@ -2,7 +2,11 @@ import React from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
 
 function Inventory() {
-  return <></>;
+  return (
+    <>
+      <SimpleLineChart />
+    </>
+  );
 }
 
 const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];

@@ -1,1 +1,16 @@
+.fruit {
+  width: 100px;
+  height: 100px;
+}
 
+.shelf {
+  display: flex;
+  flex-direction: row;
+}
+
+.fridge {
+  transform: translate(200px, 200px);
+  padding: 20px;
+  width: 250px;
+  border: 10px solid yellow;
+}
