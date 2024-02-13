@@ -20,6 +20,7 @@ function Home() {
     a.href = image;
     a.download = createFileName(extension, name);
     a.click();
+    // TODO: Upload to Amazon S3
   };
 
   const downloadScreenShot = () => {
