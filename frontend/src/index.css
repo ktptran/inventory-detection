@@ -9,7 +9,7 @@
 }
 
 .fridge {
-  transform: translate(200px, 200px);
+  transform: translate(50px, 50px);
   padding: 20px;
   width: 250px;
   border: 10px solid yellow;
@@ -17,7 +17,7 @@
 
 .door {
   position: absolute;
-  transform: translate(150px, 180px);
+  transform: translate(50px, 50px);
   background-color: brown;
   width: 335px;
   height: 520px;
