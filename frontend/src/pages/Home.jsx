@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, createRef } from 'react';
 
 import apple from '../assets/apple.png';
 import orange from '../assets/orange.png';
@@ -6,13 +6,31 @@ import banana from '../assets/banana.png';
 import door from '../assets/refrigerator-door.jpeg';
 
 import { useDraggable } from 'use-draggable';
+import { useScreenshot, createFileName } from 'use-react-screenshot';
 
 function Home() {
+  const refrigeratorRef = createRef(null);
+  const [image, takeScreenshot] = useScreenshot({
+    type: 'image/jpeg',
+    quality: 1.0,
+  });
+
+  const download = (image, { name = 'img', extension = 'jpg' } = {}) => {
+    const a = document.createElement('a');
+    a.href = image;
+    a.download = createFileName(extension, name);
+    a.click();
+  };
+
+  const downloadScreenShot = () => {
+    takeScreenshot(refrigeratorRef.current).then(download);
+  };
+
   return (
     <>
       <Directions />
-      <Door />
-      <Refrigerator />
+      <Door downloadScreenShot={downloadScreenShot} />
+      <Refrigerator refrigeratorRef={refrigeratorRef} />
     </>
   );
 }
@@ -30,12 +48,17 @@ function Directions() {
   );
 }
 
-function Door() {
+function Door({ downloadScreenShot }) {
   const divRef = useRef(null);
   const [isAnimating, setIsAnimating] = useState(false);
 
   function handleAnimation() {
-    isAnimating ? setIsAnimating(false) : setIsAnimating(true);
+    if (isAnimating) {
+      setIsAnimating(false);
+      downloadScreenShot();
+    } else {
+      setIsAnimating(true);
+    }
   }
 
   return (
@@ -59,9 +82,9 @@ function DraggableComponent(props) {
   );
 }
 
-function Refrigerator() {
+function Refrigerator({ refrigeratorRef }) {
   return (
-    <div className="fridge">
+    <div className="fridge" ref={refrigeratorRef}>
       <div className="shelf">
         <DraggableComponent src={apple} alt="apple-1" />
         <DraggableComponent src={orange} alt="orange-1" />
