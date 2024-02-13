@@ -7,8 +7,59 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import Refrigerator from '../assets/example_image.jpg';
+
+const initialData = [
+  {
+    name: '15:00',
+    orange: 4,
+    banana: 2,
+    apple: 2,
+  },
+  {
+    name: '16:00',
+    orange: 3,
+    banana: 1,
+    apple: 2,
+  },
+  {
+    name: '17:00',
+    orange: 2,
+    banana: 9,
+    apple: 2,
+  },
+  {
+    name: '18:00',
+    orange: 2,
+    banana: 3,
+    apple: 2,
+  },
+  {
+    name: '19:00',
+    orange: 1,
+    banana: 4,
+    apple: 2,
+  },
+  {
+    name: '20:00',
+    orange: 2,
+    banana: 3,
+    apple: 2,
+  },
+  {
+    name: '21:00',
+    orange: 3,
+    banana: 4,
+    apple: 2,
+  },
+];
+const latestEntry = [
+  { name: 'Banana', count: 1 },
+  { name: 'Apple', count: 2 },
+  { name: 'Orange', count: 3 },
+];
 
 function Inventory() {
   const [data, setData] = useState(null);
@@ -28,58 +79,14 @@ function Inventory() {
     // TODO: Pulled updated img
   };
 
+  const refreshData = () => {
+    setEntryLabel('Latest Entry');
+    setEntryValue(latestEntry);
+  };
+
   useEffect(() => {
     // TODO: Backend function to pull in data
     if (data === null) {
-      const initialData = [
-        {
-          name: '15:00',
-          orange: 4,
-          banana: 2,
-          apple: 2,
-        },
-        {
-          name: '16:00',
-          orange: 3,
-          banana: 1,
-          apple: 2,
-        },
-        {
-          name: '17:00',
-          orange: 2,
-          banana: 9,
-          apple: 2,
-        },
-        {
-          name: '18:00',
-          orange: 2,
-          banana: 3,
-          apple: 2,
-        },
-        {
-          name: '19:00',
-          orange: 1,
-          banana: 4,
-          apple: 2,
-        },
-        {
-          name: '20:00',
-          orange: 2,
-          banana: 3,
-          apple: 2,
-        },
-        {
-          name: '21:00',
-          orange: 3,
-          banana: 4,
-          apple: 2,
-        },
-      ];
-      const latestEntry = [
-        { name: 'Banana', count: 1 },
-        { name: 'Apple', count: 2 },
-        { name: 'Orange', count: 3 },
-      ];
       setEntryValue(latestEntry);
       setData(initialData);
     }
@@ -89,7 +96,7 @@ function Inventory() {
     <Grid container spacing={2}>
       {data && <Description data={data} updateSelectedData={updateSelectedData} />}
       <Grid item xs={1}></Grid>
-      {data && <Entry entryValue={entryValue} entryLabel={entryLabel} />}
+      {data && <Entry entryValue={entryValue} entryLabel={entryLabel} refreshData={refreshData} />}
     </Grid>
   );
 }
@@ -120,12 +127,19 @@ function Description({ data, updateSelectedData }) {
   );
 }
 
-function Entry({ entryValue, entryLabel }) {
+function Entry({ entryValue, entryLabel, refreshData }) {
   return (
     <Grid item xs={6}>
       <div>
-        <h2>{entryLabel}</h2>
-        <div style={{ display: 'flex', justifyContent: 'space-between', paddingRight: '50px' }}>
+        <div className="flex-space-between">
+          <h2>{entryLabel}</h2>
+          <div style={{ padding: '20px' }}>
+            <Button variant="outlined" onClick={() => refreshData()}>
+              Refresh
+            </Button>
+          </div>
+        </div>
+        <div className="flex-space-between">
           <TableContainer component={Paper} style={{ width: '450px' }}>
             <Table>
               <TableHead>

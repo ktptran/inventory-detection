@@ -48,3 +48,9 @@
   display: flex;
   justify-content: center;
 }
+
+.flex-space-between {
+  display: flex;
+  justify-content: space-between;
+  padding-right: 50px;
+}
