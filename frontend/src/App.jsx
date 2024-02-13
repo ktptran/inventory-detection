@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Route, Routes, BrowserRouter as Router, Navigate } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 
@@ -11,12 +11,16 @@ import NoMatch from './pages/NoMatch';
 import Login from './pages/Login';
 import Inventory from './pages/Inventory';
 
+import { UserContext } from './context/UserContext';
+
 function App() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [user, setUser] = useState(null);
 
+  const value = useMemo(() => ({ user, setUser }), [user, setUser]);
+
   return (
-    <>
+    <UserContext.Provider value={value}>
       <CssBaseline />
       <Router>
         {user && <NavBar setIsDrawerOpen={setIsDrawerOpen} setUser={setUser} />}
@@ -29,7 +33,7 @@ function App() {
         </Routes>
         {user && <Footer />}
       </Router>
-    </>
+    </UserContext.Provider>
   );
 }
 

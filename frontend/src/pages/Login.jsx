@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useContext } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,6 +11,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { signIn, signOut } from 'aws-amplify/auth';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
 
 function Copyright(props) {
   return (
@@ -28,8 +29,8 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignIn(props) {
+  const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
-  const { setUser } = props;
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
