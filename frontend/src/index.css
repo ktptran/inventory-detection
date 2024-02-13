@@ -29,7 +29,7 @@
 
 .doorOpen {
   /*prespectiv creates the door open effect*/
-  transform: perspective(2000px) translateZ(0px) translateX(200px) translateY(200px) rotateY(-105deg);
+  transform: perspective(2000px) translateZ(0px) translateX(70px) translateY(50px) rotateY(-105deg);
 }
 
 .container {

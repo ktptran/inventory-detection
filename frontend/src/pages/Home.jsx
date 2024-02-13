@@ -17,22 +17,23 @@ function Home() {
     quality: 1.0,
   });
 
-  const download = (image, { name = 'img', extension = 'jpg' } = {}) => {
+  const upload = (image, { name = 'img', extension = 'jpg' } = {}) => {
     const a = document.createElement('a');
+    // Base 64 image URL
     a.href = image;
-    a.download = createFileName(extension, name);
-    a.click();
+    // a.download = createFileName(extension, name);
+    // a.click();
     // TODO: Upload to Amazon S3
   };
 
-  const downloadScreenShot = () => {
-    takeScreenshot(refrigeratorRef.current).then(download);
+  const uploadScreenShot = () => {
+    takeScreenshot(refrigeratorRef.current).then(upload);
   };
 
   return (
     <Grid container spacing={2}>
       <Grid item xs={6}>
-        <Door downloadScreenShot={downloadScreenShot} />
+        <Door uploadScreenShot={uploadScreenShot} />
         <Refrigerator refrigeratorRef={refrigeratorRef} />
       </Grid>
       <Grid item xs={6}>
@@ -59,14 +60,14 @@ function Directions() {
   );
 }
 
-function Door({ downloadScreenShot }) {
+function Door({ uploadScreenShot }) {
   const divRef = useRef(null);
   const [isAnimating, setIsAnimating] = useState(false);
 
   function handleAnimation() {
     if (isAnimating) {
       setIsAnimating(false);
-      downloadScreenShot();
+      uploadScreenShot();
     } else {
       setIsAnimating(true);
     }
