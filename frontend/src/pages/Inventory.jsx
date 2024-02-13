@@ -30,7 +30,7 @@ function CurrentImage() {
   return (
     <div>
       <h3>Latest Photo</h3>
-      <img src={Refrigerator} alt="latest-photo" />
+      <img src={Refrigerator} alt="latest" />
     </div>
   );
 }
