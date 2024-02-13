@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 
 import apple from '../assets/apple.png';
-import orange from '../assets/orange.jpeg';
+import orange from '../assets/orange.png';
 import banana from '../assets/banana.png';
+import door from '../assets/refrigerator-door.jpeg';
 
 import { useDraggable } from 'use-draggable';
 
@@ -10,6 +11,7 @@ function Home() {
   return (
     <>
       <Directions />
+      <Door />
       <Refrigerator />
     </>
   );
@@ -28,6 +30,25 @@ function Directions() {
   );
 }
 
+function Door() {
+  const divRef = useRef(null);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  function handleAnimation() {
+    isAnimating ? setIsAnimating(false) : setIsAnimating(true);
+  }
+
+  return (
+    <img
+      src={door}
+      alt="door"
+      className={`door ${isAnimating ? 'doorOpen' : ''}`}
+      ref={divRef}
+      onClick={handleAnimation}
+    />
+  );
+}
+
 function DraggableComponent(props) {
   const { targetRef, handleRef } = useDraggable({ controlStyle: true });
   const { src, alt } = props;
@@ -40,20 +61,20 @@ function DraggableComponent(props) {
 
 function Refrigerator() {
   return (
-    <div class="fridge">
-      <div class="shelf">
+    <div className="fridge">
+      <div className="shelf">
         <DraggableComponent src={apple} alt="apple-1" />
         <DraggableComponent src={orange} alt="orange-1" />
       </div>
-      <div class="shelf">
+      <div className="shelf">
         <DraggableComponent src={orange} alt="orange-2" />
         <DraggableComponent src={apple} alt="apple-2" />
       </div>
-      <div class="shelf">
+      <div className="shelf">
         <DraggableComponent src={banana} alt="banana-1" />
         <DraggableComponent src={banana} alt="banana-2" />
       </div>
-      <div class="shelf">
+      <div className="shelf">
         <DraggableComponent src={banana} alt="banana-3" />
         <DraggableComponent src={orange} alt="orange-4" />
       </div>

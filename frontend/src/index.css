@@ -14,3 +14,20 @@
   width: 250px;
   border: 10px solid yellow;
 }
+
+.door {
+  position: absolute;
+  transform: translate(150px, 180px);
+  background-color: brown;
+  width: 335px;
+  height: 520px;
+  z-index: 3;
+  transform-origin: left;
+  /*Speed of the Door animation*/
+  transition: all 0.5s ease-in-out;
+}
+
+.doorOpen {
+  /*prespectiv creates the door open effect*/
+  transform: perspective(2000px) translateZ(0px) translateX(200px) translateY(200px) rotateY(-105deg);
+}
