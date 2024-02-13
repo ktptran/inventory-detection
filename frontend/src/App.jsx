@@ -28,7 +28,7 @@ function App() {
         <Routes>
           <Route path="/home" element={user ? <Home /> : <Navigate to="/login" replace />} />
           <Route path="/login" element={<Login setUser={setUser} />} />
-          <Route path="/inventory" element={<Inventory />} />
+          <Route path="/inventory" element={user ? <Inventory /> : <Navigate to="/login" replace />} />
           <Route path="*" element={<NoMatch />} />
         </Routes>
         {user && <Footer />}

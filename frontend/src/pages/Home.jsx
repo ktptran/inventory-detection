@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 import apple from '../assets/apple.png';
 import orange from '../assets/orange.png';
 import banana from '../assets/banana.png';
-import door from '../assets/refrigerator-door.jpeg';
+import door from '../assets/refrigerator-door.png';
 
 import { useDraggable } from 'use-draggable';
 import { useScreenshot, createFileName } from 'use-react-screenshot';
@@ -32,12 +32,12 @@ function Home() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={6}>
+      <Grid item xs={8}>
+        <Directions />
+      </Grid>
+      <Grid item xs={4}>
         <Door uploadScreenShot={uploadScreenShot} />
         <Refrigerator refrigeratorRef={refrigeratorRef} />
-      </Grid>
-      <Grid item xs={6}>
-        <Directions />
       </Grid>
     </Grid>
   );
@@ -45,7 +45,7 @@ function Home() {
 
 function Directions() {
   return (
-    <div className="container">
+    <div className="container" style={{ padding: '20px' }}>
       <div className="vertical-center">
         <h2>Welcome to the Refrigerator Inventory Detection Demo!</h2>
         <p>Open the refrigerator and move the items in and out.</p>

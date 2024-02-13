@@ -17,10 +17,9 @@
 
 .door {
   position: absolute;
-  transform: translate(50px, 50px);
-  background-color: brown;
-  width: 335px;
-  height: 520px;
+  transform: translate(-20px, 20px);
+  width: 370px;
+  height: 550px;
   z-index: 3;
   transform-origin: left;
   /*Speed of the Door animation*/
@@ -29,7 +28,7 @@
 
 .doorOpen {
   /*prespectiv creates the door open effect*/
-  transform: perspective(2000px) translateZ(0px) translateX(70px) translateY(50px) rotateY(-105deg);
+  transform: perspective(3000px) translateZ(0px) translateX(350px) translateY(20px) rotateY(95deg);
 }
 
 .container {
@@ -43,4 +42,9 @@
   top: 50%;
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
 }

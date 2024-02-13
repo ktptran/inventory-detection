@@ -1,95 +1,162 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import { LineChart } from '@mui/x-charts/LineChart';
-import { DataGrid } from '@mui/x-data-grid';
-import Refrigerator from '../assets/refrigerator-door.jpeg';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import Refrigerator from '../assets/example_image.jpg';
+
+const rows = [
+  { name: 'Banana', count: 1 },
+  { name: 'Apple', count: 2 },
+  { name: 'Orange', count: 3 },
+];
 
 function Inventory() {
+  const [data, setData] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
+
+  useEffect(() => {
+    // TODO: Backend function to pull in data
+    const initialData = [
+      {
+        name: '15:00',
+        orange: 4,
+        banana: 2,
+        apple: 2,
+      },
+      {
+        name: '16:00',
+        orange: 3,
+        banana: 1,
+        apple: 2,
+      },
+      {
+        name: '17:00',
+        orange: 2,
+        banana: 9,
+        apple: 2,
+      },
+      {
+        name: '18:00',
+        orange: 2,
+        banana: 3,
+        apple: 2,
+      },
+      {
+        name: '19:00',
+        orange: 1,
+        banana: 4,
+        apple: 2,
+      },
+      {
+        name: '20:00',
+        orange: 2,
+        banana: 3,
+        apple: 2,
+      },
+      {
+        name: '21:00',
+        orange: 3,
+        banana: 4,
+        apple: 2,
+      },
+    ];
+    setData(initialData);
+    setSelectedTime(initialData);
+  }, [data]);
+
   return (
     <Grid container spacing={2}>
+      <Description />
+      <Photo selectedTime={selectedTime} />
       <Grid item xs={6}>
         <div style={{ padding: '20px' }}>
-          <Description />
-          <CurrentImage />
+          <div className="flex-center" style={{ paddingBottom: '25px' }}>
+            <DataTable data={data} selectedTime={selectedTime} />
+          </div>
+          <div className="flex-center">
+            <FruitChart data={data} />
+          </div>
         </div>
-      </Grid>
-      <Grid item xs={6}>
-        <Box sx={{ s: 2 }}>
-          <DataTable />
-        </Box>
-        <Box>
-          <SimpleLineChart />
-        </Box>
       </Grid>
     </Grid>
   );
 }
 
-function CurrentImage() {
-  return (
-    <div>
-      <h3>Latest Photo</h3>
-      <img src={Refrigerator} alt="latest" />
-    </div>
-  );
-}
-
 function Description() {
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>Inventory</h2>
-      <p>This graph shows you the history of all three fruits.</p>
-      <p>To look at one individually, select the corresponding ID.</p>
-      <p>Selecting a bubble on the graph will allow an image to appear of the associated image.</p>
-    </div>
+    <Grid item xs={4}>
+      <div style={{ paddingLeft: '50px' }}>
+        <h2>Inventory</h2>
+        <p>This page includes a photo, table, and graph.</p>
+        <p>
+          Selecting a bubble on the graph at a specific timeframe will update both the table and photo with the details
+          at that time.
+        </p>
+      </div>
+    </Grid>
   );
 }
 
-const columns = [
-  { field: 'id', headerName: 'ID' },
-  { field: 'fruit', headerName: 'fruit' },
-  { field: 'count', headerName: 'count' },
-];
+function Photo({ selectedTime }) {
+  const [photoLabel, setPhotoLabel] = useState('Latest Photo');
 
-const rows = [
-  { id: 1, fruit: 'orange', count: 35 },
-  { id: 2, fruit: 'apple', count: 42 },
-  { id: 3, fruit: 'banana', count: 45 },
-];
-
-function DataTable() {
   return (
-    <div style={{ height: '300px', width: '500px' }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 5 },
-          },
-        }}
-        pageSizeOptions={[5, 10]}
-        checkboxSelection
-      />
-    </div>
+    <Grid item xs={2}>
+      <h2 className="flex-center">{photoLabel}</h2>
+      <div className="flex-center">
+        <img src={Refrigerator} alt="latest" style={{ width: '150px', height: '300px' }} />
+      </div>
+    </Grid>
   );
 }
-const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
-const pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
-const xLabels = ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'];
 
-function SimpleLineChart() {
+function DataTable({ data, selectedTime }) {
   return (
-    <LineChart
-      width={500}
-      height={300}
-      series={[
-        { data: pData, label: 'pv' },
-        { data: uData, label: 'uv' },
-      ]}
-      xAxis={[{ scaleType: 'point', data: xLabels }]}
-    />
+    <TableContainer component={Paper} style={{ width: '450px', transform: 'translateX(25px)' }}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Fruit</TableCell>
+            <TableCell align="right">Calories</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows.map((row) => (
+            <TableRow key={row.name}>
+              <TableCell component="th" scope="row">
+                {row.name}
+              </TableCell>
+              <TableCell align="right">{row.count}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+}
+
+function FruitChart({ data }) {
+  return (
+    <>
+      {data && (
+        <LineChart width={500} height={300} data={data}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Line type="monotone" dataKey="apple" stroke="blue" />
+          <Line type="monotone" dataKey="orange" stroke="green" />
+          <Line type="monotone" dataKey="banana" stroke="red" />
+        </LineChart>
+      )}
+    </>
   );
 }
 
