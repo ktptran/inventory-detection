@@ -29,7 +29,7 @@ function MuiDrawer({ isDrawerOpen, setIsDrawerOpen }) {
         </Box>
         {/* Routing */}
         <Button color="inherit" onClick={() => setIsDrawerOpen(false)}>
-          <Link to="/home" style={linkStyle}>
+          <Link to="/refrigerator" style={linkStyle}>
             Refrigerator
           </Link>
         </Button>

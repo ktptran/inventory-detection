@@ -37,10 +37,11 @@ export default function SignIn(props) {
     const username = data.get('username');
     const password = data.get('password');
     try {
+      // TODO: Bug with refresh where the user is logged out - maintain state
       await signOut();
       const user = await signIn({ username, password });
       setUser(user);
-      navigate('/home');
+      navigate('/refrigerator');
     } catch (error) {
       console.log('error signing in', error);
     }

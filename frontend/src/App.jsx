@@ -6,7 +6,7 @@ import NavBar from './components/NavBar';
 import Footer from './components/Footer';
 import Drawer from './components/Drawer';
 
-import Home from './pages/Home';
+import Refrigerator from './pages/Refrigerator';
 import NoMatch from './pages/NoMatch';
 import Login from './pages/Login';
 import Inventory from './pages/Inventory';
@@ -27,7 +27,7 @@ function App() {
         {user && <NavBar setIsDrawerOpen={setIsDrawerOpen} setUser={setUser} />}
         <Drawer setIsDrawerOpen={setIsDrawerOpen} isDrawerOpen={isDrawerOpen} />
         <Routes>
-          <Route path="/home" element={user ? <Home /> : <Navigate to="/login" replace />} />
+          <Route path="/refrigerator" element={user ? <Refrigerator /> : <Navigate to="/login" replace />} />
           <Route path="/inventory" element={user ? <Inventory /> : <Navigate to="/login" replace />} />
           <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="*" element={<NoMatch />} />
