@@ -10,88 +10,102 @@ import Paper from '@mui/material/Paper';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import Refrigerator from '../assets/example_image.jpg';
 
-const rows = [
-  { name: 'Banana', count: 1 },
-  { name: 'Apple', count: 2 },
-  { name: 'Orange', count: 3 },
-];
-
 function Inventory() {
   const [data, setData] = useState(null);
-  const [selectedTime, setSelectedTime] = useState(null);
+
+  // Latest values
+  const [entryValue, setEntryValue] = useState(null);
+  const [entryLabel, setEntryLabel] = useState('Latest Entry');
+
+  const updateSelectedData = (e) => {
+    const value = e.activePayload[0].payload;
+    setEntryValue([
+      { name: 'Banana', count: value['banana'] },
+      { name: 'Apple', count: value['apple'] },
+      { name: 'Orange', count: value['orange'] },
+    ]);
+    setEntryLabel(value['name']);
+    // TODO: Pulled updated img
+  };
 
   useEffect(() => {
     // TODO: Backend function to pull in data
-    const initialData = [
-      {
-        name: '15:00',
-        orange: 4,
-        banana: 2,
-        apple: 2,
-      },
-      {
-        name: '16:00',
-        orange: 3,
-        banana: 1,
-        apple: 2,
-      },
-      {
-        name: '17:00',
-        orange: 2,
-        banana: 9,
-        apple: 2,
-      },
-      {
-        name: '18:00',
-        orange: 2,
-        banana: 3,
-        apple: 2,
-      },
-      {
-        name: '19:00',
-        orange: 1,
-        banana: 4,
-        apple: 2,
-      },
-      {
-        name: '20:00',
-        orange: 2,
-        banana: 3,
-        apple: 2,
-      },
-      {
-        name: '21:00',
-        orange: 3,
-        banana: 4,
-        apple: 2,
-      },
-    ];
-    setData(initialData);
-    setSelectedTime(initialData);
+    if (data === null) {
+      const initialData = [
+        {
+          name: '15:00',
+          orange: 4,
+          banana: 2,
+          apple: 2,
+        },
+        {
+          name: '16:00',
+          orange: 3,
+          banana: 1,
+          apple: 2,
+        },
+        {
+          name: '17:00',
+          orange: 2,
+          banana: 9,
+          apple: 2,
+        },
+        {
+          name: '18:00',
+          orange: 2,
+          banana: 3,
+          apple: 2,
+        },
+        {
+          name: '19:00',
+          orange: 1,
+          banana: 4,
+          apple: 2,
+        },
+        {
+          name: '20:00',
+          orange: 2,
+          banana: 3,
+          apple: 2,
+        },
+        {
+          name: '21:00',
+          orange: 3,
+          banana: 4,
+          apple: 2,
+        },
+      ];
+      const latestEntry = [
+        { name: 'Banana', count: 1 },
+        { name: 'Apple', count: 2 },
+        { name: 'Orange', count: 3 },
+      ];
+      setEntryValue(latestEntry);
+      setData(initialData);
+    }
   }, [data]);
 
   return (
     <Grid container spacing={2}>
-      {data && <Description data={data} />}
+      {data && <Description data={data} updateSelectedData={updateSelectedData} />}
       <Grid item xs={1}></Grid>
-      {data && <Photo selectedTime={selectedTime} data={data} />}
+      {data && <Entry entryValue={entryValue} entryLabel={entryLabel} />}
     </Grid>
   );
 }
 
-function Description({ data }) {
+function Description({ data, updateSelectedData }) {
   return (
     <Grid item xs={5}>
       <div style={{ paddingLeft: '50px' }}>
         <h2>Inventory</h2>
-        <p>This page includes a photo, table, and graph.</p>
         <p>
           Selecting a bubble on the graph at a specific timeframe will update both the table and photo with the details
           at that time.
         </p>
       </div>
       <div style={{ padding: '20px' }}>
-        <LineChart width={500} height={300} data={data}>
+        <LineChart width={600} height={350} data={data} onClick={(e) => updateSelectedData(e)}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
           <YAxis />
@@ -106,44 +120,37 @@ function Description({ data }) {
   );
 }
 
-function Photo({ selectedTime, data }) {
-  const [photoLabel, setPhotoLabel] = useState('Latest Entry');
-
+function Entry({ entryValue, entryLabel }) {
   return (
     <Grid item xs={6}>
       <div>
-        <h2>{photoLabel}</h2>
+        <h2>{entryLabel}</h2>
         <div style={{ display: 'flex', justifyContent: 'space-between', paddingRight: '50px' }}>
-          <DataTable data={data} selectedTime={selectedTime} />
+          <TableContainer component={Paper} style={{ width: '450px' }}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Fruit</TableCell>
+                  <TableCell align="right">Count</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {entryValue &&
+                  entryValue.map((row) => (
+                    <TableRow key={row.name}>
+                      <TableCell component="th" scope="row">
+                        {row.name}
+                      </TableCell>
+                      <TableCell align="right">{row.count}</TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
           <img src={Refrigerator} alt="latest" style={{ width: '200px', height: '400px' }} />
         </div>
       </div>
     </Grid>
-  );
-}
-
-function DataTable({ data, selectedTime }) {
-  return (
-    <TableContainer component={Paper} style={{ width: '450px' }}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Fruit</TableCell>
-            <TableCell align="right">Count</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.name}>
-              <TableCell component="th" scope="row">
-                {row.name}
-              </TableCell>
-              <TableCell align="right">{row.count}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
   );
 }
 
