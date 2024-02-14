@@ -9,12 +9,19 @@ export class StorageStack extends cdk.Stack {
 	constructor(scope: Construct, id: string, props?: any) {
 		super(scope, id, props);
 
-		this.bucket = new cdk.aws_s3.Bucket(this, "Bucket", {});
+		const { environment, projectName, accountId, region } = props;
 
-		this.database = new cdk.aws_timestream.CfnDatabase(this, "Database", {});
+		this.bucket = new cdk.aws_s3.Bucket(this, "Bucket", {
+			bucketName: `${environment}-${projectName}-${accountId}-${region}-bucket`,
+		});
+
+		this.database = new cdk.aws_timestream.CfnDatabase(this, "Database", {
+			databaseName: `${environment}-${projectName}-db`,
+		});
 
 		this.table = new cdk.aws_timestream.CfnTable(this, "Table", {
-			databaseName: this.database.databaseName ?? "",
+			databaseName: `${environment}-${projectName}-db`,
+			tableName: `${environment}-${projectName}-table`,
 		});
 
 		new cdk.CfnOutput(this, "ImageBucket", {

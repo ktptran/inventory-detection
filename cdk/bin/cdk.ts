@@ -7,12 +7,14 @@ import { StorageStack } from "../lib/storage-stack";
 import { WebStack } from "../lib/web-stack";
 
 const envVariables = {
+	environment: process.env["ENV"],
 	projectName: process.env["PROJECT_NAME"],
 	region: process.env["AWS_REGION"],
+	accountId: process.env["AWS_ACCOUNT_ID"],
 };
 
 const app = new cdk.App();
-new AuthStack(app, "AuthStack", { ...envVariables });
+const authStack = new AuthStack(app, "AuthStack", { ...envVariables });
 
 const storageStack = new StorageStack(app, "StorageStack", { ...envVariables });
 
@@ -21,6 +23,7 @@ new ApiStack(app, "ApiStack", {
 	bucket: storageStack.bucket,
 	database: storageStack.database,
 	table: storageStack.table,
+	userPool: authStack.userPool,
 });
 
 // TODO: WebStack

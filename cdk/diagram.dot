@@ -190,6 +190,19 @@ digraph "Diagram" {
           width = 1.2,
           height = 1.466,
         ];
+        "ApiStack/smRole" [
+          label = " smRole",
+          fontsize = 12,
+          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Security-Identity-Compliance/64/Arch_AWS-Identity-and-Access-Management_64@5x.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 1.2,
+          height = 1.466,
+        ];
         "ApiStack/StateMachine" [
           label = " StateMachine",
           fontsize = 12,
@@ -216,6 +229,19 @@ digraph "Diagram" {
           width = 2,
           height = 2.266,
         ];
+        "ApiStack/getInventoryRole" [
+          label = " getInventoryRole",
+          fontsize = 12,
+          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Security-Identity-Compliance/64/Arch_AWS-Identity-and-Access-Management_64@5x.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 1.2,
+          height = 1.466,
+        ];
         "ApiStack/getInventoryHandler" [
           label = " getInventoryHandler",
           fontsize = 12,
@@ -228,6 +254,19 @@ digraph "Diagram" {
           labelloc = "b",
           width = 2,
           height = 2.266,
+        ];
+        "ApiStack/lambdaImageRole" [
+          label = " lambdaImageRole",
+          fontsize = 12,
+          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Security-Identity-Compliance/64/Arch_AWS-Identity-and-Access-Management_64@5x.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 1.2,
+          height = 1.466,
         ];
         "ApiStack/getImageHandler" [
           label = " getImageHandler",
@@ -278,10 +317,19 @@ digraph "Diagram" {
   "ApiStack/HttpApi" -> "ApiStack/getImageHandler" [
     dir = "both",
   ];
+  "ApiStack/StateMachine" -> "ApiStack/smRole" [
+    dir = "both",
+  ];
   "ApiStack/lambdaImageHandler" -> "ApiStack/StateMachine" [
     dir = "both",
   ];
+  "ApiStack/getInventoryHandler" -> "ApiStack/getInventoryRole" [
+    dir = "both",
+  ];
   "ApiStack/getImageHandler" -> "StorageStack/Bucket" [
+    dir = "both",
+  ];
+  "ApiStack/getImageHandler" -> "ApiStack/lambdaImageRole" [
     dir = "both",
   ];
 }

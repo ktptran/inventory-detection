@@ -3,18 +3,45 @@ import * as apigw from "aws-cdk-lib/aws-apigatewayv2";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as sfn from "aws-cdk-lib/aws-stepfunctions";
 import * as sfn_tasks from "aws-cdk-lib/aws-stepfunctions-tasks";
+import { HttpUserPoolAuthorizer } from "aws-cdk-lib/aws-apigatewayv2-authorizers";
 import { Construct } from "constructs";
 
 export class ApiStack extends cdk.Stack {
 	constructor(scope: Construct, id: string, props?: any) {
 		super(scope, id, props);
 
-		const { bucket, projectName, region, database, table } = props;
+		const {
+			bucket,
+			projectName,
+			environment,
+			accountId,
+			region,
+			database,
+			table,
+			userPool,
+		} = props;
 
 		// API Gateway
-		// TODO: AUthorization with Cognito
 		const httpApi = new apigw.HttpApi(this, "HttpApi", {
-			createDefaultStage: true, // Creates API URL
+			createDefaultStage: true,
+			apiName: `${environment}-${projectName}-api`,
+			corsPreflight: {
+				allowHeaders: [
+					"Content-Type",
+					"X-Amz-Date",
+					"Authorization",
+					"X-Api-Key",
+					"Access-Control-Allow-Credentials",
+					"Access-Control-Allow-Headers",
+				],
+				allowMethods: [
+					apigw.CorsHttpMethod.GET,
+					apigw.CorsHttpMethod.HEAD,
+					apigw.CorsHttpMethod.OPTIONS,
+					apigw.CorsHttpMethod.POST,
+				],
+				allowOrigins: ["*"],
+			},
 		});
 
 		// Puts image in the s3 bucket
@@ -23,8 +50,9 @@ export class ApiStack extends cdk.Stack {
 				Type: "Task",
 				Parameters: {
 					Body: {},
-					Bucket: "ExampleBucket",
-					Key: "MyData",
+					Bucket: `${environment}-${projectName}-${accountId}-${region}-bucket`,
+					// TODO: have input parameters for setting the key
+					Key: "Example",
 				},
 				Resource: "arn:aws:states:::aws-sdk:s3:putObject",
 			},
@@ -34,7 +62,15 @@ export class ApiStack extends cdk.Stack {
 			stateJson: {
 				Type: "Task",
 				Parameters: {
-					Image: {},
+					//
+					Image: {
+						S3Object: {
+							Bucket: "string",
+							Name: "string",
+							Version: "string",
+						},
+					},
+					// TODO: Get projectArn from created
 					ProjectVersionArn: "MyData",
 				},
 				Resource: "arn:aws:states:::aws-sdk:rekognition:detectCustomLabels",
@@ -45,9 +81,9 @@ export class ApiStack extends cdk.Stack {
 			stateJson: {
 				Type: "Task",
 				Parameters: {
-					DatabaseName: "MyData",
+					DatabaseName: `${environment}-${projectName}-db`,
 					Records: [{}],
-					TableName: "MyData",
+					TableName: `${environment}-${projectName}-table`,
 				},
 				Resource: "arn:aws:states:::aws-sdk:timestreamwrite:writeRecords",
 			},
@@ -57,9 +93,26 @@ export class ApiStack extends cdk.Stack {
 			.next(detectCustomLabels)
 			.next(writeRecords);
 
+		const smRole = new cdk.aws_iam.Role(this, "smRole", {
+			assumedBy: new cdk.aws_iam.ServicePrincipal("states.amazonaws.com"),
+			managedPolicies: [
+				cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
+					"AmazonS3FullAccess"
+				),
+				cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
+					"AmazonTimestreamFullAccess"
+				),
+				cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
+					"AmazonRekognitionFullAccess"
+				),
+			],
+		});
+
+		// TODO: Walk through all of state machine
 		const sm = new sfn.StateMachine(this, "StateMachine", {
 			definitionBody: sfn.DefinitionBody.fromChainable(chain),
 			timeout: cdk.Duration.seconds(30),
+			role: smRole,
 		});
 
 		// Initializes Step Function with base64 image and runs through the process
@@ -87,6 +140,15 @@ export class ApiStack extends cdk.Stack {
 		sm.grantStartExecution(lambdaImageHandler);
 
 		// Get list of all information from given timeframe
+		const getInventoryRole = new cdk.aws_iam.Role(this, "getInventoryRole", {
+			assumedBy: new cdk.aws_iam.ServicePrincipal("states.amazonaws.com"),
+			managedPolicies: [
+				cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
+					"AmazonTimestreamFullAccess"
+				),
+			],
+		});
+
 		const getInventoryHandler = new lambda.Function(
 			this,
 			"getInventoryHandler",
@@ -98,6 +160,7 @@ export class ApiStack extends cdk.Stack {
 					TIMESTREAM_TABLE: table.TableName,
 					TIMESTREAM_DATABASE: database.DatabaseName,
 				},
+				role: getInventoryRole,
 			}
 		);
 
@@ -114,6 +177,15 @@ export class ApiStack extends cdk.Stack {
 		});
 
 		// Get image of selected timeframe
+		const lambdaImageRole = new cdk.aws_iam.Role(this, "lambdaImageRole", {
+			assumedBy: new cdk.aws_iam.ServicePrincipal("states.amazonaws.com"),
+			managedPolicies: [
+				cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
+					"AmazonS3FullAccess"
+				),
+			],
+		});
+
 		const getImageHandler = new lambda.Function(this, "getImageHandler", {
 			code: lambda.Code.fromAsset("../backend/image_uploader"),
 			handler: "image_uploader.handler",
@@ -121,6 +193,7 @@ export class ApiStack extends cdk.Stack {
 			environment: {
 				S3_BUCKET: bucket.bucketName,
 			},
+			role: lambdaImageRole,
 		});
 
 		const getImageProxy =
