@@ -5,6 +5,7 @@ export class StorageStack extends cdk.Stack {
 	public bucket: cdk.aws_s3.Bucket;
 	public database: cdk.aws_timestream.CfnDatabase;
 	public table: cdk.aws_timestream.CfnTable;
+
 	constructor(scope: Construct, id: string, props?: any) {
 		super(scope, id, props);
 

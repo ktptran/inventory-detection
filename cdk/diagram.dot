@@ -131,9 +131,9 @@ digraph "Diagram" {
           height = 1.466,
         ];
       }
-      subgraph "cluster-SubGraph.BucketStack" {
+      subgraph "cluster-SubGraph.StorageStack" {
         graph [
-          label = "BucketStack",
+          label = "StorageStack",
           labelloc = "b",
           labeljust = "l",
           margin = "10",
@@ -143,7 +143,7 @@ digraph "Diagram" {
           style = "filled,rounded",
           fillcolor = "#e4e4e4",
         ];
-        "BucketStack/Bucket" [
+        "StorageStack/Bucket" [
           label = " Bucket",
           fontsize = 12,
           image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Storage/64/Arch_Amazon-S3-Standard_64@5x.png",
@@ -155,6 +155,14 @@ digraph "Diagram" {
           labelloc = "b",
           width = 2,
           height = 2.266,
+        ];
+        "StorageStack/Database" [
+          label = " TIMESTREAM DATABASE\nDatabase",
+          fontsize = 12,
+        ];
+        "StorageStack/Table" [
+          label = " TIMESTREAM TABLE\nTable",
+          fontsize = 12,
         ];
       }
       subgraph "cluster-SubGraph.ApiStack" {
@@ -182,23 +190,23 @@ digraph "Diagram" {
           width = 1.2,
           height = 1.466,
         ];
-      }
-      subgraph "cluster-SubGraph.WebStack" {
-        graph [
-          label = "WebStack",
-          labelloc = "b",
-          labeljust = "l",
-          margin = "10",
-          fontsize = "16",
-          penwidth = "2",
-          pencolor = "#888888",
-          style = "filled,rounded",
-          fillcolor = "#e4e4e4",
-        ];
-        "WebStack/SiteBucket" [
-          label = " SiteBucket",
+        "ApiStack/StateMachine" [
+          label = " StateMachine",
           fontsize = 12,
-          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Storage/64/Arch_Amazon-S3-Standard_64@5x.png",
+          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_App-Integration/Arch_64/Arch_AWS-Step-Functions_64@5x.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 1.2,
+          height = 1.466,
+        ];
+        "ApiStack/lambdaImageHandler" [
+          label = " lambdaImageHandler",
+          fontsize = 12,
+          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Compute/64/Arch_AWS-Lambda_64@5x.png",
           imagescale = "true",
           imagepos = "tc",
           penwidth = "0",
@@ -208,10 +216,10 @@ digraph "Diagram" {
           width = 2,
           height = 2.266,
         ];
-        "WebStack/SiteDistribution/CFDistribution" [
-          label = " CloudFront\nDistribution\nCFDistribution",
+        "ApiStack/getInventoryHandler" [
+          label = " getInventoryHandler",
           fontsize = 12,
-          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Networking-Content/64/Arch_Amazon-CloudFront_64@5x.png",
+          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Compute/64/Arch_AWS-Lambda_64@5x.png",
           imagescale = "true",
           imagepos = "tc",
           penwidth = "0",
@@ -219,7 +227,20 @@ digraph "Diagram" {
           fixedsize = "true",
           labelloc = "b",
           width = 2,
-          height = 2.6979999999999995,
+          height = 2.266,
+        ];
+        "ApiStack/getImageHandler" [
+          label = " getImageHandler",
+          fontsize = 12,
+          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Compute/64/Arch_AWS-Lambda_64@5x.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 2,
+          height = 2.266,
         ];
       }
     }
@@ -248,7 +269,19 @@ digraph "Diagram" {
   "AuthStack/DefaultValid" -> "AuthStack/CognitoDefaultAuthenticatedRole" [
     dir = "both",
   ];
-  "WebStack/SiteDistribution/CFDistribution" -> "WebStack/SiteBucket" [
+  "ApiStack/HttpApi" -> "ApiStack/lambdaImageHandler" [
+    dir = "both",
+  ];
+  "ApiStack/HttpApi" -> "ApiStack/getInventoryHandler" [
+    dir = "both",
+  ];
+  "ApiStack/HttpApi" -> "ApiStack/getImageHandler" [
+    dir = "both",
+  ];
+  "ApiStack/lambdaImageHandler" -> "ApiStack/StateMachine" [
+    dir = "both",
+  ];
+  "ApiStack/getImageHandler" -> "StorageStack/Bucket" [
     dir = "both",
   ];
 }
