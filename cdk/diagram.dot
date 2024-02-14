@@ -1,0 +1,147 @@
+digraph "Diagram" {
+  splines = "ortho";
+  pad = "1.0";
+  nodesep = "0.60";
+  ranksep = "0.75";
+  fontname = "Sans-Serif";
+  fontsize = "15";
+  dpi = "200";
+  rankdir = "BT";
+  compound = "true";
+  fontcolor = "#222222";
+  edge [
+    color = "#D5871488",
+    penwidth = 2,
+    arrowhead = "dot",
+    arrowtail = "dot",
+  ];
+  node [
+    shape = "box",
+    style = "rounded",
+    fixedsize = true,
+    width = 1.7,
+    height = 1.7,
+    labelloc = "c",
+    imagescale = true,
+    fontname = "Sans-Serif",
+    fontsize = 8,
+    margin = 8,
+  ];
+  subgraph "AuthStack" {
+    subgraph "cluster-SubGraph.AuthStack" {
+      graph [
+        label = "AuthStack",
+        labelloc = "b",
+        labeljust = "l",
+        margin = "10",
+        fontsize = "16",
+        penwidth = "2",
+        pencolor = "#888888",
+        style = "filled,rounded",
+        fillcolor = "#e4e4e4",
+      ];
+      "AuthStack/UserPool" [
+        label = " UserPool",
+        fontsize = 12,
+        image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Security-Identity-Compliance/64/Arch_Amazon-Cognito_64.png",
+        imagescale = "true",
+        imagepos = "tc",
+        penwidth = "0",
+        shape = "node",
+        fixedsize = "true",
+        labelloc = "b",
+        width = 1.2,
+        height = 1.466,
+      ];
+      "AuthStack/UserPoolClient" [
+        label = " UserPoolClient",
+        fontsize = 12,
+        image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Security-Identity-Compliance/64/Arch_Amazon-Cognito_64.png",
+        imagescale = "true",
+        imagepos = "tc",
+        penwidth = "0",
+        shape = "node",
+        fixedsize = "true",
+        labelloc = "b",
+        width = 1.2,
+        height = 1.466,
+      ];
+      "AuthStack/CognitoIdentityPool" [
+        label = " Cognito IdentityPool\nCognitoIdentityPool",
+        fontsize = 12,
+        image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Security-Identity-Compliance/64/Arch_Amazon-Cognito_64.png",
+        imagescale = "true",
+        imagepos = "tc",
+        penwidth = "0",
+        shape = "node",
+        fixedsize = "true",
+        labelloc = "b",
+        width = 1.2,
+        height = 1.682,
+      ];
+      "AuthStack/CognitoDefaultUnauthenticatedRole" [
+        label = "\nCognitoDefaultUnauthe",
+        fontsize = 12,
+        image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Security-Identity-Compliance/64/Arch_AWS-Identity-and-Access-Management_64@5x.png",
+        imagescale = "true",
+        imagepos = "tc",
+        penwidth = "0",
+        shape = "node",
+        fixedsize = "true",
+        labelloc = "b",
+        width = 1.2,
+        height = 1.682,
+      ];
+      "AuthStack/CognitoDefaultAuthenticatedRole" [
+        label = "\nCognitoDefaultAuthent",
+        fontsize = 12,
+        image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Security-Identity-Compliance/64/Arch_AWS-Identity-and-Access-Management_64@5x.png",
+        imagescale = "true",
+        imagepos = "tc",
+        penwidth = "0",
+        shape = "node",
+        fixedsize = "true",
+        labelloc = "b",
+        width = 1.2,
+        height = 1.682,
+      ];
+      "AuthStack/DefaultValid" [
+        label = " Cognito DefaultValid",
+        fontsize = 12,
+        image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Security-Identity-Compliance/64/Arch_Amazon-Cognito_64.png",
+        imagescale = "true",
+        imagepos = "tc",
+        penwidth = "0",
+        shape = "node",
+        fixedsize = "true",
+        labelloc = "b",
+        width = 1.2,
+        height = 1.466,
+      ];
+    }
+  }
+  "AuthStack/UserPoolClient" -> "AuthStack/UserPool" [
+    dir = "both",
+  ];
+  "AuthStack/CognitoIdentityPool" -> "AuthStack/UserPool" [
+    dir = "both",
+  ];
+  "AuthStack/CognitoIdentityPool" -> "AuthStack/UserPoolClient" [
+    dir = "both",
+  ];
+  "AuthStack/CognitoDefaultUnauthenticatedRole" -> "AuthStack/CognitoIdentityPool" [
+    dir = "both",
+  ];
+  "AuthStack/CognitoDefaultAuthenticatedRole" -> "AuthStack/CognitoIdentityPool" [
+    dir = "both",
+  ];
+  "AuthStack/DefaultValid" -> "AuthStack/CognitoIdentityPool" [
+    dir = "both",
+  ];
+  "AuthStack/DefaultValid" -> "AuthStack/CognitoDefaultUnauthenticatedRole" [
+    dir = "both",
+  ];
+  "AuthStack/DefaultValid" -> "AuthStack/CognitoDefaultAuthenticatedRole" [
+    dir = "both",
+  ];
+}
