@@ -1,6 +1,5 @@
 import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
-// import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class AuthStack extends cdk.Stack {
 	public userPool: cdk.aws_cognito.UserPool;

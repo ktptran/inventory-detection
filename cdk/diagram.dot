@@ -27,10 +27,10 @@ digraph "Diagram" {
     fontsize = 8,
     margin = 8,
   ];
-  subgraph "AuthStack" {
-    subgraph "cluster-SubGraph.AuthStack" {
+  subgraph "App" {
+    subgraph "cluster-SubGraph.App" {
       graph [
-        label = "AuthStack",
+        label = "App",
         labelloc = "b",
         labeljust = "l",
         margin = "10",
@@ -38,86 +38,190 @@ digraph "Diagram" {
         penwidth = "2",
         pencolor = "#888888",
         style = "filled,rounded",
-        fillcolor = "#e4e4e4",
+        fillcolor = "#f3f3f3",
       ];
-      "AuthStack/UserPool" [
-        label = " UserPool",
-        fontsize = 12,
-        image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Security-Identity-Compliance/64/Arch_Amazon-Cognito_64.png",
-        imagescale = "true",
-        imagepos = "tc",
-        penwidth = "0",
-        shape = "node",
-        fixedsize = "true",
-        labelloc = "b",
-        width = 1.2,
-        height = 1.466,
-      ];
-      "AuthStack/UserPoolClient" [
-        label = " UserPoolClient",
-        fontsize = 12,
-        image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Security-Identity-Compliance/64/Arch_Amazon-Cognito_64.png",
-        imagescale = "true",
-        imagepos = "tc",
-        penwidth = "0",
-        shape = "node",
-        fixedsize = "true",
-        labelloc = "b",
-        width = 1.2,
-        height = 1.466,
-      ];
-      "AuthStack/CognitoIdentityPool" [
-        label = " Cognito IdentityPool\nCognitoIdentityPool",
-        fontsize = 12,
-        image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Security-Identity-Compliance/64/Arch_Amazon-Cognito_64.png",
-        imagescale = "true",
-        imagepos = "tc",
-        penwidth = "0",
-        shape = "node",
-        fixedsize = "true",
-        labelloc = "b",
-        width = 1.2,
-        height = 1.682,
-      ];
-      "AuthStack/CognitoDefaultUnauthenticatedRole" [
-        label = "\nCognitoDefaultUnauthe",
-        fontsize = 12,
-        image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Security-Identity-Compliance/64/Arch_AWS-Identity-and-Access-Management_64@5x.png",
-        imagescale = "true",
-        imagepos = "tc",
-        penwidth = "0",
-        shape = "node",
-        fixedsize = "true",
-        labelloc = "b",
-        width = 1.2,
-        height = 1.682,
-      ];
-      "AuthStack/CognitoDefaultAuthenticatedRole" [
-        label = "\nCognitoDefaultAuthent",
-        fontsize = 12,
-        image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Security-Identity-Compliance/64/Arch_AWS-Identity-and-Access-Management_64@5x.png",
-        imagescale = "true",
-        imagepos = "tc",
-        penwidth = "0",
-        shape = "node",
-        fixedsize = "true",
-        labelloc = "b",
-        width = 1.2,
-        height = 1.682,
-      ];
-      "AuthStack/DefaultValid" [
-        label = " Cognito DefaultValid",
-        fontsize = 12,
-        image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Security-Identity-Compliance/64/Arch_Amazon-Cognito_64.png",
-        imagescale = "true",
-        imagepos = "tc",
-        penwidth = "0",
-        shape = "node",
-        fixedsize = "true",
-        labelloc = "b",
-        width = 1.2,
-        height = 1.466,
-      ];
+      subgraph "cluster-SubGraph.AuthStack" {
+        graph [
+          label = "AuthStack",
+          labelloc = "b",
+          labeljust = "l",
+          margin = "10",
+          fontsize = "16",
+          penwidth = "2",
+          pencolor = "#888888",
+          style = "filled,rounded",
+          fillcolor = "#e4e4e4",
+        ];
+        "AuthStack/UserPool" [
+          label = " UserPool",
+          fontsize = 12,
+          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Security-Identity-Compliance/64/Arch_Amazon-Cognito_64.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 1.2,
+          height = 1.466,
+        ];
+        "AuthStack/UserPoolClient" [
+          label = " UserPoolClient",
+          fontsize = 12,
+          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Security-Identity-Compliance/64/Arch_Amazon-Cognito_64.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 1.2,
+          height = 1.466,
+        ];
+        "AuthStack/CognitoIdentityPool" [
+          label = " Cognito IdentityPool\nCognitoIdentityPool",
+          fontsize = 12,
+          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Security-Identity-Compliance/64/Arch_Amazon-Cognito_64.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 1.2,
+          height = 1.682,
+        ];
+        "AuthStack/CognitoDefaultUnauthenticatedRole" [
+          label = "\nCognitoDefaultUnauthe",
+          fontsize = 12,
+          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Security-Identity-Compliance/64/Arch_AWS-Identity-and-Access-Management_64@5x.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 1.2,
+          height = 1.682,
+        ];
+        "AuthStack/CognitoDefaultAuthenticatedRole" [
+          label = "\nCognitoDefaultAuthent",
+          fontsize = 12,
+          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Security-Identity-Compliance/64/Arch_AWS-Identity-and-Access-Management_64@5x.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 1.2,
+          height = 1.682,
+        ];
+        "AuthStack/DefaultValid" [
+          label = " Cognito DefaultValid",
+          fontsize = 12,
+          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Security-Identity-Compliance/64/Arch_Amazon-Cognito_64.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 1.2,
+          height = 1.466,
+        ];
+      }
+      subgraph "cluster-SubGraph.BucketStack" {
+        graph [
+          label = "BucketStack",
+          labelloc = "b",
+          labeljust = "l",
+          margin = "10",
+          fontsize = "16",
+          penwidth = "2",
+          pencolor = "#888888",
+          style = "filled,rounded",
+          fillcolor = "#e4e4e4",
+        ];
+        "BucketStack/Bucket" [
+          label = " Bucket",
+          fontsize = 12,
+          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Storage/64/Arch_Amazon-S3-Standard_64@5x.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 2,
+          height = 2.266,
+        ];
+      }
+      subgraph "cluster-SubGraph.ApiStack" {
+        graph [
+          label = "ApiStack",
+          labelloc = "b",
+          labeljust = "l",
+          margin = "10",
+          fontsize = "16",
+          penwidth = "2",
+          pencolor = "#888888",
+          style = "filled,rounded",
+          fillcolor = "#e4e4e4",
+        ];
+        "ApiStack/HttpApi" [
+          label = " HttpApi",
+          fontsize = 12,
+          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Networking-Content/64/Arch_Amazon-API-Gateway_64@5x.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 1.2,
+          height = 1.466,
+        ];
+      }
+      subgraph "cluster-SubGraph.WebStack" {
+        graph [
+          label = "WebStack",
+          labelloc = "b",
+          labeljust = "l",
+          margin = "10",
+          fontsize = "16",
+          penwidth = "2",
+          pencolor = "#888888",
+          style = "filled,rounded",
+          fillcolor = "#e4e4e4",
+        ];
+        "WebStack/SiteBucket" [
+          label = " SiteBucket",
+          fontsize = 12,
+          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Storage/64/Arch_Amazon-S3-Standard_64@5x.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 2,
+          height = 2.266,
+        ];
+        "WebStack/SiteDistribution/CFDistribution" [
+          label = " CloudFront\nDistribution\nCFDistribution",
+          fontsize = 12,
+          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Networking-Content/64/Arch_Amazon-CloudFront_64@5x.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 2,
+          height = 2.6979999999999995,
+        ];
+      }
     }
   }
   "AuthStack/UserPoolClient" -> "AuthStack/UserPool" [
@@ -142,6 +246,9 @@ digraph "Diagram" {
     dir = "both",
   ];
   "AuthStack/DefaultValid" -> "AuthStack/CognitoDefaultAuthenticatedRole" [
+    dir = "both",
+  ];
+  "WebStack/SiteDistribution/CFDistribution" -> "WebStack/SiteBucket" [
     dir = "both",
   ];
 }

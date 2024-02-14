@@ -37,5 +37,15 @@ export class WebStack extends cdk.Stack {
 			value: siteBucket.bucketName,
 			description: "Image storage bucket name",
 		});
+
+		new cdk.CfnOutput(this, "CloudFrontDistributionDomainName", {
+			value: siteDistribution.distributionDomainName,
+			description: "CloudFront distribution domain name.",
+		});
+
+		new cdk.CfnOutput(this, "CloudFrontDistributionId", {
+			value: siteDistribution.distributionId,
+			description: "CloudFront distribution id.",
+		});
 	}
 }
