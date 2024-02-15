@@ -22,6 +22,7 @@
 		"recharts": "^2.12.0",
 		"use-draggable": "^1.5.2",
 		"use-react-screenshot": "^4.0.0",
+		"uuid": "^9.0.1",
 		"web-vitals": "^2.1.4"
 	},
 	"scripts": {

@@ -6,8 +6,25 @@ import reportWebVitals from './reportWebVitals';
 import { Amplify } from 'aws-amplify';
 import { AMPLIFY_CONFIG } from './aws-exports';
 import { BrowserRouter } from 'react-router-dom';
+import { fetchAuthSession } from 'aws-amplify/auth';
 
-Amplify.configure(AMPLIFY_CONFIG);
+const authToken = (await fetchAuthSession()).tokens?.idToken?.toString();
+
+Amplify.configure({
+  Auth: {
+    Cognito: { ...AMPLIFY_CONFIG.Auth.Cognito },
+  },
+  API: {
+    REST: {
+      headers: async () => {
+        return { Authorization: authToken };
+      },
+      HttpApi: {
+        ...AMPLIFY_CONFIG.API.REST.HttpApi,
+      },
+    },
+  },
+});
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
