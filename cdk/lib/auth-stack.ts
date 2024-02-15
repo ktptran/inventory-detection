@@ -8,7 +8,7 @@ export class AuthStack extends cdk.Stack {
 
 		const { projectName } = props;
 
-		const userPool = new cdk.aws_cognito.UserPool(this, "UserPool", {
+		this.userPool = new cdk.aws_cognito.UserPool(this, "UserPool", {
 			autoVerify: { email: true },
 			passwordPolicy: {
 				minLength: 8,
@@ -24,7 +24,7 @@ export class AuthStack extends cdk.Stack {
 			"UserPoolClient",
 			{
 				generateSecret: false,
-				userPool: userPool,
+				userPool: this.userPool,
 				userPoolClientName: `${projectName}-userPool`,
 			}
 		);
@@ -37,7 +37,7 @@ export class AuthStack extends cdk.Stack {
 				cognitoIdentityProviders: [
 					{
 						clientId: userPoolClient.userPoolClientId,
-						providerName: userPool.userPoolProviderName,
+						providerName: this.userPool.userPoolProviderName,
 					},
 				],
 			}
@@ -111,12 +111,12 @@ export class AuthStack extends cdk.Stack {
 		);
 
 		new cdk.CfnOutput(this, "CognitoRegion", {
-			value: userPool.env.region,
+			value: this.userPool.env.region,
 			description: "Cognito user pool region.",
 		});
 
 		new cdk.CfnOutput(this, "CognitoUserPool", {
-			value: userPool.userPoolId,
+			value: this.userPool.userPoolId,
 			description: "Cognito user pool ID",
 		});
 

@@ -1,17 +1,26 @@
 import * as cdk from "aws-cdk-lib";
 import * as apigw from "aws-cdk-lib/aws-apigatewayv2";
 import * as lambda from "aws-cdk-lib/aws-lambda";
-
+import { HttpUserPoolAuthorizer } from "aws-cdk-lib/aws-apigatewayv2-authorizers";
 import { Construct } from "constructs";
 
 export class ApiStack extends cdk.Stack {
 	constructor(scope: Construct, id: string, props?: any) {
 		super(scope, id, props);
 
-		const { projectName, environment, accountId, region, database, table } =
-			props;
+		const {
+			projectName,
+			environment,
+			accountId,
+			region,
+			database,
+			table,
+			userPool,
+		} = props;
 
 		// API Gateway
+		const authorizer = new HttpUserPoolAuthorizer("UserAuthorizer", userPool);
+
 		const httpApi = new apigw.HttpApi(this, "HttpApi", {
 			createDefaultStage: true,
 			apiName: `${environment}-${projectName}-api`,
@@ -32,6 +41,7 @@ export class ApiStack extends cdk.Stack {
 				],
 				allowOrigins: ["*"],
 			},
+			defaultAuthorizer: authorizer,
 		});
 
 		/**

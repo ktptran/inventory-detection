@@ -13,7 +13,7 @@ const envVariables = {
 };
 
 const app = new cdk.App();
-new AuthStack(app, "AuthStack", { ...envVariables });
+const authStack = new AuthStack(app, "AuthStack", { ...envVariables });
 
 const storageStack = new StorageStack(app, "StorageStack", { ...envVariables });
 
@@ -21,6 +21,7 @@ new ApiStack(app, "ApiStack", {
 	...envVariables,
 	database: storageStack.database,
 	table: storageStack.table,
+	userPool: authStack.userPool,
 });
 
 // TODO: WebStack
