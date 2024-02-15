@@ -9,7 +9,7 @@ import door from '../assets/refrigerator-door.png';
 import { useDraggable } from 'use-draggable';
 import { useScreenshot } from 'use-react-screenshot';
 import { Link } from 'react-router-dom';
-import { putImage } from '../api/apiService';
+import { postImage } from '../api/apiService';
 
 function Home() {
   const refrigeratorRef = createRef(null);
@@ -23,7 +23,7 @@ function Home() {
     // const a = document.createElement('a');
     // a.href = image;
     // Base 64 image URL
-    putImage(image);
+    postImage(image);
     // a.download = createFileName(extension, name);
     // a.click();
     // TODO: Upload to Amazon S3

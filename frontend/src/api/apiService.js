@@ -1,18 +1,12 @@
-import { put } from 'aws-amplify/api';
+import { post, get } from 'aws-amplify/api';
 import { v4 as uuidv4 } from 'uuid';
 
-async function putImage(image) {
+async function postImage(image) {
   try {
-    const restOperation = put({
+    const restOperation = post({
       apiName: 'HttpApi',
       path: '/image',
       options: {
-        headers: {
-          'Access-Control-Allow-Headers': 'Content-Type',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'OPTIONS,PUT',
-          'Content-Type': 'application/json',
-        },
         body: {
           image,
           uuid: uuidv4(),
@@ -26,4 +20,4 @@ async function putImage(image) {
   }
 }
 
-export { putImage };
+export { postImage };

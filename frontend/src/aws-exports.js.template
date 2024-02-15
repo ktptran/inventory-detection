@@ -10,7 +10,7 @@ export const AMPLIFY_CONFIG = {
   API: {
     REST: {
       HttpApi: {
-        endpoint: "%API_ENDPOINT%",
+        endpoint: "%API_ENDPOINT%", 
         region: "%REGION%",
       }
     }

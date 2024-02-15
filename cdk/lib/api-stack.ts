@@ -107,7 +107,7 @@ export class ApiStack extends cdk.Stack {
 			handler: "get_image.handler",
 			runtime: lambda.Runtime.PYTHON_3_12,
 			environment: {
-				S3_BUCKET: `${environment}-${projectName}-${accountId}-${region}-bucket`,
+				BUCKET_NAME: `${environment}-${projectName}-${accountId}-${region}-bucket`,
 			},
 			role: lambdaS3Role,
 		});
@@ -146,7 +146,7 @@ export class ApiStack extends cdk.Stack {
 			);
 
 		httpApi.addRoutes({
-			path: "/image/:time",
+			path: "/image/{key_name}",
 			methods: [apigw.HttpMethod.GET],
 			integration: getImageProxy,
 		});

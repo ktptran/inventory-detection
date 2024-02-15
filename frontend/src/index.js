@@ -17,7 +17,13 @@ Amplify.configure({
   API: {
     REST: {
       headers: async () => {
-        return { Authorization: authToken };
+        return {
+          Authorization: authToken,
+          'Access-Control-Allow-Credentials': true,
+          'Access-Control-Allow-Headers': 'Content-Type',
+          'Access-Control-Allow-Methods': 'OPTIONS,POST,GET',
+          'Access-Control-Allow-Origin': '*',
+        };
       },
       HttpApi: {
         ...AMPLIFY_CONFIG.API.REST.HttpApi,
