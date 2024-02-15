@@ -38,7 +38,7 @@ export class ApiStack extends cdk.Stack {
 		 * Roles
 		 */
 		const lambdaS3Role = new cdk.aws_iam.Role(this, "lambdaS3Role", {
-			assumedBy: new cdk.aws_iam.ServicePrincipal("states.amazonaws.com"),
+			assumedBy: new cdk.aws_iam.ServicePrincipal("lambda.amazonaws.com"),
 			managedPolicies: [
 				cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
 					"AmazonS3FullAccess"
@@ -48,7 +48,7 @@ export class ApiStack extends cdk.Stack {
 
 		// Retrieving latest entry and associated image
 		const getInventoryRole = new cdk.aws_iam.Role(this, "getInventoryRole", {
-			assumedBy: new cdk.aws_iam.ServicePrincipal("states.amazonaws.com"),
+			assumedBy: new cdk.aws_iam.ServicePrincipal("lambda.amazonaws.com"),
 			managedPolicies: [
 				cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
 					"AmazonTimestreamFullAccess"
@@ -65,7 +65,7 @@ export class ApiStack extends cdk.Stack {
 
 		// Initializes Step Function with base64 image and runs through the process
 		const lambdaImageHandler = new lambda.Function(this, "lambdaImageHandler", {
-			code: lambda.Code.fromAsset("../backend/image_uploader"),
+			code: lambda.Code.fromAsset("../backend"),
 			handler: "image_uploader.handler",
 			runtime: lambda.Runtime.PYTHON_3_12,
 			environment: {
@@ -79,8 +79,8 @@ export class ApiStack extends cdk.Stack {
 			this,
 			"getInventoryHandler",
 			{
-				code: lambda.Code.fromAsset("../backend/image_uploader"),
-				handler: "image_uploader.handler",
+				code: lambda.Code.fromAsset("../backend"),
+				handler: "get_inventory.handler",
 				runtime: lambda.Runtime.PYTHON_3_12,
 				environment: {
 					TIMESTREAM_TABLE: table.TableName,
@@ -93,8 +93,8 @@ export class ApiStack extends cdk.Stack {
 
 		// Get image of selected timeframe
 		const getImageHandler = new lambda.Function(this, "getImageHandler", {
-			code: lambda.Code.fromAsset("../backend/image_uploader"),
-			handler: "image_uploader.handler",
+			code: lambda.Code.fromAsset("../backend"),
+			handler: "get_image.handler",
 			runtime: lambda.Runtime.PYTHON_3_12,
 			environment: {
 				S3_BUCKET: `${environment}-${projectName}-${accountId}-${region}-bucket`,
