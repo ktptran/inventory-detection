@@ -20,4 +20,17 @@ async function postImage(image) {
   }
 }
 
+async function getImage(key_name) {
+  try {
+    const restOperation = get({
+      apiname: 'HttpApi',
+      path: `/image/${key_name}`,
+    });
+    const response = await restOperation.response;
+    console.log('GET call succeeded: ', response);
+  } catch (err) {
+    console.error('GET call failed: ', err);
+  }
+}
+
 export { postImage };
