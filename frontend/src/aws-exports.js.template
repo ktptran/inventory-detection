@@ -1,8 +1,16 @@
 export const AMPLIFY_CONFIG = {
-  "Auth": {
-    "region": "%REGION%",
-    "userPoolId": "%COGNITO_USER_POOL_ID%",
-    "userPoolWebClientId": "%COGNITO_USER_POOL_WEB_CLIENT_ID%",
-    "identityPoolId": "%COGNITO_IDENTITY_POOL_ID%"
+  Auth: {
+    region: "%REGION%",
+    userPoolId: "%COGNITO_USER_POOL_ID%",
+    userPoolWebClientId: "%COGNITO_USER_POOL_WEB_CLIENT_ID%",
+    identityPoolId: "%COGNITO_IDENTITY_POOL_ID%"
+  },
+  API: {
+    REST: {
+      HttpApi: {
+        endpoint: "%API_ENDPOINT%",
+        region: "%REGION%",
+      }
+    }
   }
 };
