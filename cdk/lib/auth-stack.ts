@@ -18,6 +18,7 @@ export class AuthStack extends cdk.Stack {
 				requireSymbols: false,
 			},
 		});
+
 		const userPoolClient = new cdk.aws_cognito.UserPoolClient(
 			this,
 			"UserPoolClient",
@@ -27,6 +28,7 @@ export class AuthStack extends cdk.Stack {
 				userPoolClientName: `${projectName}-userPool`,
 			}
 		);
+
 		const identityPool = new cdk.aws_cognito.CfnIdentityPool(
 			this,
 			"CognitoIdentityPool",
@@ -40,6 +42,7 @@ export class AuthStack extends cdk.Stack {
 				],
 			}
 		);
+
 		const unauthenticatedRole = new cdk.aws_iam.Role(
 			this,
 			"CognitoDefaultUnauthenticatedRole",
@@ -94,6 +97,7 @@ export class AuthStack extends cdk.Stack {
 				resources: ["*"],
 			})
 		);
+
 		const defaultPolicy = new cdk.aws_cognito.CfnIdentityPoolRoleAttachment(
 			this,
 			"DefaultValid",

@@ -1,25 +1,15 @@
 import * as cdk from "aws-cdk-lib";
 import * as apigw from "aws-cdk-lib/aws-apigatewayv2";
 import * as lambda from "aws-cdk-lib/aws-lambda";
-import * as sfn from "aws-cdk-lib/aws-stepfunctions";
-import * as sfn_tasks from "aws-cdk-lib/aws-stepfunctions-tasks";
-import { HttpUserPoolAuthorizer } from "aws-cdk-lib/aws-apigatewayv2-authorizers";
+
 import { Construct } from "constructs";
 
 export class ApiStack extends cdk.Stack {
 	constructor(scope: Construct, id: string, props?: any) {
 		super(scope, id, props);
 
-		const {
-			bucket,
-			projectName,
-			environment,
-			accountId,
-			region,
-			database,
-			table,
-			userPool,
-		} = props;
+		const { projectName, environment, accountId, region, database, table } =
+			props;
 
 		// API Gateway
 		const httpApi = new apigw.HttpApi(this, "HttpApi", {
@@ -44,76 +34,34 @@ export class ApiStack extends cdk.Stack {
 			},
 		});
 
-		// Puts image in the s3 bucket
-		const recordImage = new sfn.CustomState(this, "s3ImageUploader", {
-			stateJson: {
-				Type: "Task",
-				Parameters: {
-					Body: {},
-					Bucket: `${environment}-${projectName}-${accountId}-${region}-bucket`,
-					// TODO: have input parameters for setting the key
-					Key: "Example",
-				},
-				Resource: "arn:aws:states:::aws-sdk:s3:putObject",
-			},
-		});
-
-		const detectCustomLabels = new sfn.CustomState(this, "detectCustomLabels", {
-			stateJson: {
-				Type: "Task",
-				Parameters: {
-					//
-					Image: {
-						S3Object: {
-							Bucket: "string",
-							Name: "string",
-							Version: "string",
-						},
-					},
-					// TODO: Get projectArn from created
-					ProjectVersionArn: "MyData",
-				},
-				Resource: "arn:aws:states:::aws-sdk:rekognition:detectCustomLabels",
-			},
-		});
-
-		const writeRecords = new sfn.CustomState(this, "writeRecords", {
-			stateJson: {
-				Type: "Task",
-				Parameters: {
-					DatabaseName: `${environment}-${projectName}-db`,
-					Records: [{}],
-					TableName: `${environment}-${projectName}-table`,
-				},
-				Resource: "arn:aws:states:::aws-sdk:timestreamwrite:writeRecords",
-			},
-		});
-
-		const chain = sfn.Chain.start(recordImage)
-			.next(detectCustomLabels)
-			.next(writeRecords);
-
-		const smRole = new cdk.aws_iam.Role(this, "smRole", {
+		/**
+		 * Roles
+		 */
+		const lambdaS3Role = new cdk.aws_iam.Role(this, "lambdaS3Role", {
 			assumedBy: new cdk.aws_iam.ServicePrincipal("states.amazonaws.com"),
 			managedPolicies: [
 				cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
 					"AmazonS3FullAccess"
 				),
+			],
+		});
+
+		// Retrieving latest entry and associated image
+		const getInventoryRole = new cdk.aws_iam.Role(this, "getInventoryRole", {
+			assumedBy: new cdk.aws_iam.ServicePrincipal("states.amazonaws.com"),
+			managedPolicies: [
 				cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
 					"AmazonTimestreamFullAccess"
 				),
 				cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
-					"AmazonRekognitionFullAccess"
+					"AmazonS3FullAccess"
 				),
 			],
 		});
 
-		// TODO: Walk through all of state machine
-		const sm = new sfn.StateMachine(this, "StateMachine", {
-			definitionBody: sfn.DefinitionBody.fromChainable(chain),
-			timeout: cdk.Duration.seconds(30),
-			role: smRole,
-		});
+		/**
+		 * Lambda functions
+		 */
 
 		// Initializes Step Function with base64 image and runs through the process
 		const lambdaImageHandler = new lambda.Function(this, "lambdaImageHandler", {
@@ -121,10 +69,42 @@ export class ApiStack extends cdk.Stack {
 			handler: "image_uploader.handler",
 			runtime: lambda.Runtime.PYTHON_3_12,
 			environment: {
-				STATE_MACHINE_ARN: sm.stateMachineArn,
+				BUCKET_NAME: `${environment}-${projectName}-${accountId}-${region}-bucket`,
 			},
+			role: lambdaS3Role,
 		});
 
+		// Get list of all information from given timeframe
+		const getInventoryHandler = new lambda.Function(
+			this,
+			"getInventoryHandler",
+			{
+				code: lambda.Code.fromAsset("../backend/image_uploader"),
+				handler: "image_uploader.handler",
+				runtime: lambda.Runtime.PYTHON_3_12,
+				environment: {
+					TIMESTREAM_TABLE: table.TableName,
+					TIMESTREAM_DATABASE: database.DatabaseName,
+					BUCKET_NAME: `${environment}-${projectName}-${accountId}-${region}-bucket`,
+				},
+				role: getInventoryRole,
+			}
+		);
+
+		// Get image of selected timeframe
+		const getImageHandler = new lambda.Function(this, "getImageHandler", {
+			code: lambda.Code.fromAsset("../backend/image_uploader"),
+			handler: "image_uploader.handler",
+			runtime: lambda.Runtime.PYTHON_3_12,
+			environment: {
+				S3_BUCKET: `${environment}-${projectName}-${accountId}-${region}-bucket`,
+			},
+			role: lambdaS3Role,
+		});
+
+		/**
+		 * Lambda & API Gateway integrations
+		 */
 		const imageUploadLambdaProxy =
 			new cdk.aws_apigatewayv2_integrations.HttpLambdaIntegration(
 				"ImageUploadIntegration",
@@ -136,33 +116,6 @@ export class ApiStack extends cdk.Stack {
 			methods: [apigw.HttpMethod.POST],
 			integration: imageUploadLambdaProxy,
 		});
-
-		sm.grantStartExecution(lambdaImageHandler);
-
-		// Get list of all information from given timeframe
-		const getInventoryRole = new cdk.aws_iam.Role(this, "getInventoryRole", {
-			assumedBy: new cdk.aws_iam.ServicePrincipal("states.amazonaws.com"),
-			managedPolicies: [
-				cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
-					"AmazonTimestreamFullAccess"
-				),
-			],
-		});
-
-		const getInventoryHandler = new lambda.Function(
-			this,
-			"getInventoryHandler",
-			{
-				code: lambda.Code.fromAsset("../backend/image_uploader"),
-				handler: "image_uploader.handler",
-				runtime: lambda.Runtime.PYTHON_3_12,
-				environment: {
-					TIMESTREAM_TABLE: table.TableName,
-					TIMESTREAM_DATABASE: database.DatabaseName,
-				},
-				role: getInventoryRole,
-			}
-		);
 
 		const getInventoryProxy =
 			new cdk.aws_apigatewayv2_integrations.HttpLambdaIntegration(
@@ -176,26 +129,6 @@ export class ApiStack extends cdk.Stack {
 			integration: getInventoryProxy,
 		});
 
-		// Get image of selected timeframe
-		const lambdaImageRole = new cdk.aws_iam.Role(this, "lambdaImageRole", {
-			assumedBy: new cdk.aws_iam.ServicePrincipal("states.amazonaws.com"),
-			managedPolicies: [
-				cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
-					"AmazonS3FullAccess"
-				),
-			],
-		});
-
-		const getImageHandler = new lambda.Function(this, "getImageHandler", {
-			code: lambda.Code.fromAsset("../backend/image_uploader"),
-			handler: "image_uploader.handler",
-			runtime: lambda.Runtime.PYTHON_3_12,
-			environment: {
-				S3_BUCKET: bucket.bucketName,
-			},
-			role: lambdaImageRole,
-		});
-
 		const getImageProxy =
 			new cdk.aws_apigatewayv2_integrations.HttpLambdaIntegration(
 				"getImageIntegration",
@@ -203,7 +136,7 @@ export class ApiStack extends cdk.Stack {
 			);
 
 		httpApi.addRoutes({
-			path: "/image",
+			path: "/image/:time",
 			methods: [apigw.HttpMethod.GET],
 			integration: getImageProxy,
 		});

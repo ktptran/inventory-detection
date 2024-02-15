@@ -4,7 +4,6 @@ import * as cdk from "aws-cdk-lib";
 import { AuthStack } from "../lib/auth-stack";
 import { ApiStack } from "../lib/api-stack";
 import { StorageStack } from "../lib/storage-stack";
-import { WebStack } from "../lib/web-stack";
 
 const envVariables = {
 	environment: process.env["ENV"],
@@ -14,16 +13,14 @@ const envVariables = {
 };
 
 const app = new cdk.App();
-const authStack = new AuthStack(app, "AuthStack", { ...envVariables });
+new AuthStack(app, "AuthStack", { ...envVariables });
 
 const storageStack = new StorageStack(app, "StorageStack", { ...envVariables });
 
 new ApiStack(app, "ApiStack", {
 	...envVariables,
-	bucket: storageStack.bucket,
 	database: storageStack.database,
 	table: storageStack.table,
-	userPool: authStack.userPool,
 });
 
 // TODO: WebStack
