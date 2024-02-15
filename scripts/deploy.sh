@@ -3,11 +3,8 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 echo "Script directory: $SCRIPT_DIR"
 
-# Setting environment variables
-export ENV="dev"
-export PROJECT_NAME="inv-det"
-export AWS_REGION="us-west-2"
-export AWS_ACCOUNT_ID=`aws sts get-caller-identity --query Account --output text`
+# Set environment variables
+. env.sh
 
 # Check for CDK Toolkit
 echo "Checking for CDK Bootstrap..."
