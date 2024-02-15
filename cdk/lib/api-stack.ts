@@ -25,19 +25,13 @@ export class ApiStack extends cdk.Stack {
 			createDefaultStage: true,
 			apiName: `${environment}-${projectName}-api`,
 			corsPreflight: {
-				allowHeaders: [
-					"Content-Type",
-					"X-Amz-Date",
-					"Authorization",
-					"X-Api-Key",
-					"Access-Control-Allow-Credentials",
-					"Access-Control-Allow-Headers",
-				],
+				allowHeaders: ["Authorization"],
 				allowMethods: [
 					apigw.CorsHttpMethod.GET,
 					apigw.CorsHttpMethod.HEAD,
 					apigw.CorsHttpMethod.OPTIONS,
 					apigw.CorsHttpMethod.POST,
+					apigw.CorsHttpMethod.PUT,
 				],
 				allowOrigins: ["*"],
 			},
@@ -53,6 +47,9 @@ export class ApiStack extends cdk.Stack {
 				cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
 					"AmazonS3FullAccess"
 				),
+				cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
+					"service-role/AWSLambdaBasicExecutionRole"
+				),
 			],
 		});
 
@@ -65,6 +62,9 @@ export class ApiStack extends cdk.Stack {
 				),
 				cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
 					"AmazonS3FullAccess"
+				),
+				cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
+					"service-role/AWSLambdaBasicExecutionRole"
 				),
 			],
 		});
@@ -93,8 +93,8 @@ export class ApiStack extends cdk.Stack {
 				handler: "get_inventory.handler",
 				runtime: lambda.Runtime.PYTHON_3_12,
 				environment: {
-					TIMESTREAM_TABLE: table.TableName,
-					TIMESTREAM_DATABASE: database.DatabaseName,
+					// TIMESTREAM_TABLE: table.TableName,
+					// TIMESTREAM_DATABASE: database.DatabaseName,
 					BUCKET_NAME: `${environment}-${projectName}-${accountId}-${region}-bucket`,
 				},
 				role: getInventoryRole,
