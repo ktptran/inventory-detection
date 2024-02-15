@@ -18,12 +18,12 @@ logger.setLevel(logging.INFO)
 def handler(event, context):
     try:
         logger.info('Uploading image to s3')
-        payload = event['body']
+        payload = json.loads(event['body'])
         logger.info(f'Payload: {payload}')
         image, uuid = payload['image'], payload['uuid']
         file_extension = extract_file_extension(image)
         file_name = f"{base_path}{uuid}.{file_extension}"
-        # image = image[image.find(",") + 1:]
+        image = image[image.find(",") + 1:]
         file_content = base64.b64decode(image)
         logger.info(f'saving_s3_file , bucket={bucket}')
         upload_response = s3_upload(file_name, file_content)

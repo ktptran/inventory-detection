@@ -1,15 +1,28 @@
-import { post, get } from 'aws-amplify/api';
-import { v4 as uuidv4 } from 'uuid';
+import { put, get } from 'aws-amplify/api';
+import { fetchAuthSession } from 'aws-amplify/auth';
 
-async function postImage(image) {
+async function returnHeaders() {
+  const authToken = (await fetchAuthSession()).tokens?.idToken?.toString();
+  return {
+    Authorization: authToken,
+    'Access-Control-Allow-Credentials': true,
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'GET, PUT, POST',
+    'Access-Control-Allow-Origin': '*',
+    'Content-Type': 'application/json',
+  };
+}
+
+async function putImage(image, uuid) {
   try {
-    const restOperation = post({
+    const restOperation = put({
       apiName: 'HttpApi',
       path: '/image',
       options: {
+        headers: await returnHeaders(),
         body: {
           image,
-          uuid: uuidv4(),
+          uuid,
         },
       },
     });
@@ -25,6 +38,9 @@ async function getImage(key_name) {
     const restOperation = get({
       apiname: 'HttpApi',
       path: `/image/${key_name}`,
+      options: {
+        headers: await returnHeaders(),
+      },
     });
     const response = await restOperation.response;
     console.log('GET call succeeded: ', response);
@@ -33,4 +49,4 @@ async function getImage(key_name) {
   }
 }
 
-export { postImage };
+export { putImage, getImage };

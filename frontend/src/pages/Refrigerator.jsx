@@ -9,7 +9,9 @@ import door from '../assets/refrigerator-door.png';
 import { useDraggable } from 'use-draggable';
 import { useScreenshot } from 'use-react-screenshot';
 import { Link } from 'react-router-dom';
-import { postImage } from '../api/apiService';
+import { putImage } from '../api/apiService';
+
+import { v4 as uuidv4 } from 'uuid';
 
 function Home() {
   const refrigeratorRef = createRef(null);
@@ -19,14 +21,9 @@ function Home() {
     quality: 1.0,
   });
 
-  const upload = (image, { name = 'img', extension = 'jpg' } = {}) => {
-    // const a = document.createElement('a');
-    // a.href = image;
-    // Base 64 image URL
-    postImage(image);
-    // a.download = createFileName(extension, name);
-    // a.click();
-    // TODO: Upload to Amazon S3
+  const upload = async (image, { name = 'img', extension = 'jpg' } = {}) => {
+    const uuid = uuidv4();
+    await putImage(image, uuid);
   };
 
   const uploadScreenShot = () => {

@@ -25,7 +25,14 @@ export class ApiStack extends cdk.Stack {
 			createDefaultStage: true,
 			apiName: `${environment}-${projectName}-api`,
 			corsPreflight: {
-				allowHeaders: ["Authorization"],
+				allowHeaders: [
+					"Authorization",
+					"Access-Control-Allow-Credentials",
+					"Access-Control-Allow-Headers",
+					"Access-Control-Allow-Methods",
+					"Access-Control-Allow-Origin",
+					"Content-Type",
+				],
 				allowMethods: [
 					apigw.CorsHttpMethod.GET,
 					apigw.CorsHttpMethod.HEAD,
@@ -35,7 +42,7 @@ export class ApiStack extends cdk.Stack {
 				],
 				allowOrigins: ["*"],
 			},
-			defaultAuthorizer: authorizer,
+			// defaultAuthorizer: authorizer,
 		});
 
 		/**
@@ -123,7 +130,7 @@ export class ApiStack extends cdk.Stack {
 
 		httpApi.addRoutes({
 			path: "/image",
-			methods: [apigw.HttpMethod.POST],
+			methods: [apigw.HttpMethod.POST, apigw.HttpMethod.PUT],
 			integration: imageUploadLambdaProxy,
 		});
 
