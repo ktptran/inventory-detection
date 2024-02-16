@@ -1,6 +1,6 @@
 import * as cdk from "aws-cdk-lib";
-import { Construct } from "constructs";
 import * as sfn from "aws-cdk-lib/aws-stepfunctions";
+import { Construct } from "constructs";
 
 export class ProcessingStack extends cdk.Stack {
 	constructor(scope: Construct, id: string, props?: any) {
@@ -57,8 +57,8 @@ export class ProcessingStack extends cdk.Stack {
 				runtime: cdk.aws_lambda.Runtime.PYTHON_3_12,
 				role: timestreamRole,
 				environment: {
-					DATABASE_NAME: `${environment}-${projectName}-${accountId}-${region}-db`,
-					TABLE_NAME: `${environment}-${projectName}-${accountId}-${region}-table`,
+					DATABASE_NAME: `${environment}-${projectName}-db`,
+					TABLE_NAME: `${environment}-${projectName}-table`,
 				},
 			}
 		);

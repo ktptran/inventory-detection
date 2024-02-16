@@ -24,14 +24,14 @@ def handler(event, context):
     ]
     common_attributes = {
         'Dimensions': dimensions,
-        'MeasureValueType': 'BIGINT',
+        'MeasureValueType': 'VARCHAR',
         'Time': str(int(round(time.time() * 1000)))
     }
     records = []
-    for label in event["labels"].keys():
+    for label in event["taskresult"].keys():
         records.append({
             "MeasureName": label,
-            "MeasureValue": str(event["labels"][label])
+            "MeasureValue": str(event["taskresult"][label])
         })
     try:
         result = write_records(records, common_attributes)
@@ -77,10 +77,56 @@ if __name__ == "__main__":
                 "sequencer": "0A1B2C3D4E5F678901"
             }
         },
-        "labels": {
-            "orange": 0, 
-            "banana": 2, 
-            "apple": 1
+        "taskresult": {
+            "ExecutedVersion": "$LATEST",
+            "Payload": {
+                "orange": 0,
+                "banana": 2,
+                "apple": 1
+            },
+            "SdkHttpMetadata": {
+            "AllHttpHeaders": {
+                "X-Amz-Executed-Version": [
+                    "$LATEST"
+                ],
+                "x-amzn-Remapped-Content-Length": [
+                    "0"
+                ],
+                "Connection": [
+                    "keep-alive"
+                ],
+                "x-amzn-RequestId": [
+                    "8a93772d-42db-4a24-974b-a682876ae24e"
+                ],
+                "Content-Length": [
+                    "38"
+                ],
+                "Date": [
+                    "Fri, 16 Feb 2024 22:32:29 GMT"
+                ],
+                "X-Amzn-Trace-Id": [
+                    "root=1-65cfe27d-2eac6cab18474d67155651b4;parent=037840104f8071ba;sampled=0;lineage=6d429cd8:0"
+                ],
+                "Content-Type": [
+                    "application/json"
+                ]
+            },
+            "HttpHeaders": {
+                "Connection": "keep-alive",
+                "Content-Length": "38",
+                "Content-Type": "application/json",
+                "Date": "Fri, 16 Feb 2024 22:32:29 GMT",
+                "X-Amz-Executed-Version": "$LATEST",
+                "x-amzn-Remapped-Content-Length": "0",
+                "x-amzn-RequestId": "8a93772d-42db-4a24-974b-a682876ae24e",
+                "X-Amzn-Trace-Id": "root=1-65cfe27d-2eac6cab18474d67155651b4;parent=037840104f8071ba;sampled=0;lineage=6d429cd8:0"
+            },
+            "HttpStatusCode": 200
+            },
+            "SdkResponseMetadata": {
+            "RequestId": "8a93772d-42db-4a24-974b-a682876ae24e"
+            },
+            "StatusCode": 200
         }
     }
     response = handler(sample_event, {})

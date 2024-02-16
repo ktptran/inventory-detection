@@ -16,8 +16,7 @@ def handler(event, context):
         # response = process_custom_label(labels)
         response = process_custom_label({})
         logger.info(f"Custom labels detected: {response}")
-        event['labels'] = response
-        return event
+        return response
     except ClientError as e:
         logger.error(e)
         return e
