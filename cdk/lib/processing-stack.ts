@@ -8,51 +8,80 @@ export class ProcessingStack extends cdk.Stack {
 
 		const { projectName, environment, accountId, region } = props;
 
-		const detectCustomLabels = new sfn.CustomState(this, "detectCustomLabels", {
-			stateJson: {
-				Type: "Task",
-				Parameters: {
-					Image: {
-						S3Object: {
-							Bucket: "string",
-							Name: "string",
-							Version: "string",
-						},
-					},
-					ProjectVersionArn: "MyData",
-				},
-				Resource: "arn:aws:states:::aws-sdk:rekognition:detectCustomLabels",
-			},
-		});
+		const imageRekognitionRole = new cdk.aws_iam.Role(
+			this,
+			"imageRekognitionRole",
+			{
+				assumedBy: new cdk.aws_iam.ServicePrincipal("lambda.amazonaws.com"),
+				managedPolicies: [
+					cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
+						"AmazonRekognitionCustomLabelsFullAccess"
+					),
+					cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
+						"service-role/AWSLambdaBasicExecutionRole"
+					),
+				],
+			}
+		);
 
-		const writeRecords = new sfn.CustomState(this, "writeRecords", {
-			stateJson: {
-				Type: "Task",
-				Parameters: {
-					DatabaseName: `${environment}-${projectName}-db`,
-					Records: [{}],
-					TableName: `${environment}-${projectName}-table`,
-				},
-				Resource: "arn:aws:states:::aws-sdk:timestreamwrite:writeRecords",
-			},
-		});
+		const imageRekognitionLambda = new cdk.aws_lambda.Function(
+			this,
+			"TriggerLambda",
+			{
+				code: cdk.aws_lambda.Code.fromAsset("../backend"),
+				handler: "image_rekognition.handler",
+				runtime: cdk.aws_lambda.Runtime.PYTHON_3_12,
+				role: imageRekognitionRole,
+			}
+		);
 
-		const chain = sfn.Chain.start(detectCustomLabels).next(writeRecords);
-
-		const smRole = new cdk.aws_iam.Role(this, "smRole", {
-			assumedBy: new cdk.aws_iam.ServicePrincipal("states.amazonaws.com"),
+		const timestreamRole = new cdk.aws_iam.Role(this, "timestreamRole", {
+			assumedBy: new cdk.aws_iam.ServicePrincipal("lambda.amazonaws.com"),
 			managedPolicies: [
 				cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
 					"AmazonTimestreamFullAccess"
 				),
-				cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
-					"AmazonRekognitionFullAccess"
-				),
 			],
 		});
 
+		const timestreamLambda = new cdk.aws_lambda.Function(
+			this,
+			"TimestreamLambda",
+			{
+				code: cdk.aws_lambda.Code.fromAsset("../backend"),
+				handler: "write_timestream.handler",
+				runtime: cdk.aws_lambda.Runtime.PYTHON_3_12,
+				role: timestreamRole,
+			}
+		);
+
+		const imageRekognitionJob = new cdk.aws_stepfunctions_tasks.LambdaInvoke(
+			this,
+			"Custom Rekognition",
+			{
+				lambdaFunction: imageRekognitionLambda,
+				outputPath: "$.rekognition",
+			}
+		);
+
+		const timestreamJob = new cdk.aws_stepfunctions_tasks.LambdaInvoke(
+			this,
+			"Timestream Write",
+			{
+				lambdaFunction: timestreamLambda,
+				outputPath: "$.timestream",
+			}
+		);
+
+		const definition = imageRekognitionJob.next(timestreamJob);
+
+		const smRole = new cdk.aws_iam.Role(this, "smRole", {
+			assumedBy: new cdk.aws_iam.ServicePrincipal("states.amazonaws.com"),
+			managedPolicies: [],
+		});
+
 		const sm = new sfn.StateMachine(this, "StateMachine", {
-			definitionBody: sfn.DefinitionBody.fromChainable(chain),
+			definitionBody: sfn.DefinitionBody.fromChainable(definition),
 			timeout: cdk.Duration.seconds(30),
 			role: smRole,
 		});
@@ -70,15 +99,33 @@ export class ProcessingStack extends cdk.Stack {
 			],
 		});
 
-		new cdk.aws_lambda.Function(this, "TriggerLambda", {
-			code: cdk.aws_lambda.Code.fromAsset("../backend"),
-			handler: "trigger_sfn.handler",
-			runtime: cdk.aws_lambda.Runtime.PYTHON_3_12,
-			environment: {
-				SFN_ARN: sm.stateMachineArn,
-			},
-			role: triggerLambdaRole,
-		});
+		const triggerStepFunctionLambda = new cdk.aws_lambda.Function(
+			this,
+			"TriggerStepFunctionLambda",
+			{
+				code: cdk.aws_lambda.Code.fromAsset("../backend"),
+				handler: "trigger_sfn.handler",
+				runtime: cdk.aws_lambda.Runtime.PYTHON_3_12,
+				environment: {
+					SFN_ARN: sm.stateMachineArn,
+				},
+				role: triggerLambdaRole,
+			}
+		);
+
+		// TODO: Troubleshoot PutBucketNotificationConfigurationError
+		// const s3Bucket = cdk.aws_s3.Bucket.fromBucketName(
+		// 	this,
+		// 	"s3Bucket",
+		// 	`${environment}-${projectName}-${accountId}-${region}-bucket`
+		// );
+		// s3Bucket.addEventNotification(
+		// 	cdk.aws_s3.EventType.OBJECT_CREATED,
+		// 	new cdk.aws_s3_notifications.LambdaDestination(triggerStepFunctionLambda),
+		// 	{
+		// 		prefix: "images/generated/*",
+		// 	}
+		// );
 
 		// TODO: Custom resource for automatically running lambda
 
