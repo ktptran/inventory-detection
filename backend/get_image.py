@@ -1,6 +1,9 @@
+"""Get image given id of key name."""
+
+import json
 import logging
 import os
-import json
+
 from botocore.exceptions import ClientError
 from utils.processing import api_response
 from utils.s3 import generate_presigned_url

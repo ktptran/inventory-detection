@@ -1,9 +1,12 @@
-import boto3
+"""Trigger Step Function state machine after S3 put."""
+
+import json
 import logging
 import os
-import json
-from botocore.exceptions import ClientError
 import time
+
+import boto3
+from botocore.exceptions import ClientError
 from utils.processing import api_response
 
 logger = logging.getLogger()
@@ -14,6 +17,7 @@ sfn_arn = os.environ['SFN_ARN']
 sfn_client = boto3.client('stepfunctions')
 
 def handler(event, context):
+    """Main handler"""
     try:
         trigger_event = event['Records'][0]
         trigger_event['time'] = str(int(time.time() * 1000))
@@ -26,3 +30,4 @@ def handler(event, context):
     except ClientError as e:
         logger.error(e)
         return api_response(500, e)
+    

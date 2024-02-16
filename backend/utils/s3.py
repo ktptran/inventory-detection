@@ -1,3 +1,6 @@
+"""Module providing s3 boto3 commands."""
+
+
 import os
 import boto3
 

@@ -1,10 +1,14 @@
+"""Uploading image to S3"""
+
+
+import base64
 import json
 import logging
-import base64
 import os
-from utils.processing import extract_file_extension, api_response
-from utils.s3 import s3_upload, generate_presigned_url
+
 from botocore.exceptions import ClientError
+from utils.processing import api_response, extract_file_extension
+from utils.s3 import generate_presigned_url, s3_upload
 
 bucket = os.environ['BUCKET_NAME']
 

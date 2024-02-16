@@ -1,3 +1,6 @@
+"""Utils providing rekognition boto3 commands."""
+
+
 import boto3
 import os
 
@@ -8,6 +11,7 @@ CONFIDENCE_LEVEL = 85
 
 client = boto3.client('rekognition')
 
+# TODO: Once rekognition custom model implemented remove example_response
 example_response = {
     'CustomLabels': [
         {

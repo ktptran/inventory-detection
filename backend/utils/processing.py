@@ -1,3 +1,5 @@
+"""Module providing image processing and api response."""
+
 def extract_file_extension(base64_encoded_file):
     """Extracts image extension from base64 encoded file data.
     base64_encoded_file syntax as 'image/png;base64,<<imageData>>.

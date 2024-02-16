@@ -56,6 +56,10 @@ export class ProcessingStack extends cdk.Stack {
 				handler: "write_timestream.handler",
 				runtime: cdk.aws_lambda.Runtime.PYTHON_3_12,
 				role: timestreamRole,
+				environment: {
+					DATABASE_NAME: `${environment}-${projectName}-${accountId}-${region}-db`,
+					TABLE_NAME: `${environment}-${projectName}-${accountId}-${region}-table`,
+				},
 			}
 		);
 
@@ -64,7 +68,7 @@ export class ProcessingStack extends cdk.Stack {
 			"Custom Rekognition",
 			{
 				lambdaFunction: imageRekognitionLambda,
-				outputPath: "$.rekognition",
+				resultPath: "$.taskresult",
 			}
 		);
 
@@ -73,7 +77,7 @@ export class ProcessingStack extends cdk.Stack {
 			"Timestream Write",
 			{
 				lambdaFunction: timestreamLambda,
-				outputPath: "$.timestream",
+				resultPath: "$.taskresult",
 			}
 		);
 
