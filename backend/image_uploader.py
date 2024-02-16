@@ -8,7 +8,7 @@ from botocore.exceptions import ClientError
 
 bucket = os.environ['BUCKET_NAME']
 
-base_path = "/images/generated/"
+base_path = "images/generated/"
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)

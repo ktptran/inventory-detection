@@ -9,7 +9,7 @@ bucket = os.environ['BUCKET_NAME']
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-base_path = "/images/generated/"
+base_path = "images/generated/"
 
 def handler(event, context):
     try:

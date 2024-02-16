@@ -8,11 +8,6 @@ export class ProcessingStack extends cdk.Stack {
 
 		const { projectName, environment, accountId, region } = props;
 
-<<<<<<< HEAD
-		// Puts image in the s3 bucket
-		// TODO: Lambda function for intiailizing when put in specific folder
-=======
->>>>>>> 004d9c0 (refact: revised based on input)
 		const detectCustomLabels = new sfn.CustomState(this, "detectCustomLabels", {
 			stateJson: {
 				Type: "Task",
