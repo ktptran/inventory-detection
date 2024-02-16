@@ -8,8 +8,11 @@ export class ProcessingStack extends cdk.Stack {
 
 		const { projectName, environment, accountId, region } = props;
 
+<<<<<<< HEAD
 		// Puts image in the s3 bucket
 		// TODO: Lambda function for intiailizing when put in specific folder
+=======
+>>>>>>> 004d9c0 (refact: revised based on input)
 		const detectCustomLabels = new sfn.CustomState(this, "detectCustomLabels", {
 			stateJson: {
 				Type: "Task",
@@ -21,7 +24,6 @@ export class ProcessingStack extends cdk.Stack {
 							Version: "string",
 						},
 					},
-					// TODO: Get projectArn from created
 					ProjectVersionArn: "MyData",
 				},
 				Resource: "arn:aws:states:::aws-sdk:rekognition:detectCustomLabels",
@@ -54,11 +56,41 @@ export class ProcessingStack extends cdk.Stack {
 			],
 		});
 
-		// TODO: Walk through all of state machine
 		const sm = new sfn.StateMachine(this, "StateMachine", {
 			definitionBody: sfn.DefinitionBody.fromChainable(chain),
 			timeout: cdk.Duration.seconds(30),
 			role: smRole,
+		});
+
+		// Trigger lambda
+		const triggerLambdaRole = new cdk.aws_iam.Role(this, "getInventoryRole", {
+			assumedBy: new cdk.aws_iam.ServicePrincipal("lambda.amazonaws.com"),
+			managedPolicies: [
+				cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
+					"AWSStepFunctionsFullAccess"
+				),
+				cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
+					"AmazonS3FullAccess"
+				),
+			],
+		});
+
+		new cdk.aws_lambda.Function(this, "TriggerLambda", {
+			code: cdk.aws_lambda.Code.fromAsset("../backend"),
+			handler: "trigger_sfn.handler",
+			runtime: cdk.aws_lambda.Runtime.PYTHON_3_12,
+			environment: {
+				SFN_ARN: sm.stateMachineArn,
+			},
+			role: triggerLambdaRole,
+		});
+
+		// TODO: Custom resource for automatically running lambda
+
+		// CloudFormation outputs
+		new cdk.CfnOutput(this, "StateMachineArn", {
+			value: sm.stateMachineArn,
+			description: "State Machine ARN",
 		});
 	}
 }

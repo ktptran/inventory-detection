@@ -4,6 +4,7 @@ import * as cdk from "aws-cdk-lib";
 import { AuthStack } from "../lib/auth-stack";
 import { ApiStack } from "../lib/api-stack";
 import { StorageStack } from "../lib/storage-stack";
+import { ProcessingStack } from "../lib/processing-stack";
 
 const envVariables = {
 	environment: process.env["ENV"],
@@ -23,6 +24,8 @@ new ApiStack(app, "ApiStack", {
 	table: storageStack.table,
 	userPool: authStack.userPool,
 });
+
+new ProcessingStack(app, "ProcessingStack", { ...envVariables });
 
 // TODO: WebStack
 // Circular dependencies right now for pulling in data and then deploying

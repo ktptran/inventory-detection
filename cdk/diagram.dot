@@ -256,6 +256,71 @@ digraph "Diagram" {
           height = 2.266,
         ];
       }
+      subgraph "cluster-SubGraph.ProcessingStack" {
+        graph [
+          label = "ProcessingStack",
+          labelloc = "b",
+          labeljust = "l",
+          margin = "10",
+          fontsize = "16",
+          penwidth = "2",
+          pencolor = "#888888",
+          style = "filled,rounded",
+          fillcolor = "#e4e4e4",
+        ];
+        "ProcessingStack/smRole" [
+          label = " smRole",
+          fontsize = 12,
+          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Security-Identity-Compliance/64/Arch_AWS-Identity-and-Access-Management_64@5x.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 1.2,
+          height = 1.466,
+        ];
+        "ProcessingStack/StateMachine" [
+          label = " StateMachine",
+          fontsize = 12,
+          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_App-Integration/Arch_64/Arch_AWS-Step-Functions_64@5x.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 1.2,
+          height = 1.466,
+        ];
+        "ProcessingStack/getInventoryRole" [
+          label = " getInventoryRole",
+          fontsize = 12,
+          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Security-Identity-Compliance/64/Arch_AWS-Identity-and-Access-Management_64@5x.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 1.2,
+          height = 1.466,
+        ];
+        "ProcessingStack/TriggerLambda" [
+          label = " TriggerLambda",
+          fontsize = 12,
+          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Compute/64/Arch_AWS-Lambda_64@5x.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 2,
+          height = 2.266,
+        ];
+      }
     }
   }
   "AuthStack/UserPoolClient" -> "AuthStack/UserPool" [
@@ -298,6 +363,15 @@ digraph "Diagram" {
     dir = "both",
   ];
   "ApiStack/getImageHandler" -> "ApiStack/lambdaS3Role" [
+    dir = "both",
+  ];
+  "ProcessingStack/StateMachine" -> "ProcessingStack/smRole" [
+    dir = "both",
+  ];
+  "ProcessingStack/TriggerLambda" -> "ProcessingStack/StateMachine" [
+    dir = "both",
+  ];
+  "ProcessingStack/TriggerLambda" -> "ProcessingStack/getInventoryRole" [
     dir = "both",
   ];
 }
