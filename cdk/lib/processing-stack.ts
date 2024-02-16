@@ -32,6 +32,10 @@ export class ProcessingStack extends cdk.Stack {
 				handler: "image_rekognition.handler",
 				runtime: cdk.aws_lambda.Runtime.PYTHON_3_12,
 				role: imageRekognitionRole,
+				environment: {
+					BUCKET_NAME: `${environment}-${projectName}-${accountId}-${region}-bucket`,
+					PROJECT_VERSION_ARN: "TODO",
+				},
 			}
 		);
 
