@@ -17,13 +17,16 @@ def write_records(records, common_attributes):
     :param records: record of information
     :param common_attributes: attributes for every record
     """
-    response = write_client.write_records(
-        DatabaseName=DATABASE_NAME,
-        TableName=TABLE_NAME,
-        CommonAttributes=common_attributes,
-        Records=records,
-    )
-    return response
+    try:
+        response = write_client.write_records(
+            DatabaseName=DATABASE_NAME,
+            TableName=TABLE_NAME,
+            CommonAttributes=common_attributes,
+            Records=records,
+        )
+        return response
+    except write_client.exceptions.RejectedRecordsException as err:
+        _print_rejected_records_exceptions(err)
 
 def query_inventory():
     """Queries Amazon timestream for data.
@@ -35,3 +38,11 @@ def query_inventory():
         QueryString=f'SELECT time, key, measure_value::varchar  FROM "{DATABASE_NAME}"."{TABLE_NAME}" ORDER BY time DESC',
     )
     return response
+
+
+def _print_rejected_records_exceptions(err):
+    print("RejectedRecords: ", err)
+    for rr in err.response["RejectedRecords"]:
+        print("Rejected Index " + str(rr["RecordIndex"]) + ": " + rr["Reason"])
+        if "ExistingVersion" in rr:
+            print("Rejected record existing version: ", rr["ExistingVersion"])

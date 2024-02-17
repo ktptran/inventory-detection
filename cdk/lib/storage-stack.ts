@@ -24,6 +24,8 @@ export class StorageStack extends cdk.Stack {
 			tableName: `${environment}-${projectName}-table`,
 		});
 
+		this.table.addDependency(this.database);
+
 		new cdk.CfnOutput(this, "ImageBucket", {
 			value: this.bucket.bucketName,
 			description: "Image storage bucket name",

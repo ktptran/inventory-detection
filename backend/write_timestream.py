@@ -28,10 +28,10 @@ def handler(event, context):
         'Time': str(int(round(time.time() * 1000)))
     }
     records = []
-    for label in event["taskresult"].keys():
+    for label in event["taskresult"]["Payload"].keys():
         records.append({
             "MeasureName": label,
-            "MeasureValue": str(event["taskresult"][label])
+            "MeasureValue": str(event["taskresult"]["Payload"][label])
         })
     try:
         result = write_records(records, common_attributes)
