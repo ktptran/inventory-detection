@@ -268,6 +268,58 @@ digraph "Diagram" {
           style = "filled,rounded",
           fillcolor = "#e4e4e4",
         ];
+        "ProcessingStack/imageRekognitionRole" [
+          label = " imageRekognitionRole",
+          fontsize = 12,
+          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Security-Identity-Compliance/64/Arch_AWS-Identity-and-Access-Management_64@5x.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 1.2,
+          height = 1.466,
+        ];
+        "ProcessingStack/TriggerLambda" [
+          label = " TriggerLambda",
+          fontsize = 12,
+          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Compute/64/Arch_AWS-Lambda_64@5x.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 2,
+          height = 2.266,
+        ];
+        "ProcessingStack/timestreamRole" [
+          label = " timestreamRole",
+          fontsize = 12,
+          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Security-Identity-Compliance/64/Arch_AWS-Identity-and-Access-Management_64@5x.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 1.2,
+          height = 1.466,
+        ];
+        "ProcessingStack/TimestreamLambda" [
+          label = " TimestreamLambda",
+          fontsize = 12,
+          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Compute/64/Arch_AWS-Lambda_64@5x.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 2,
+          height = 2.266,
+        ];
         "ProcessingStack/smRole" [
           label = " smRole",
           fontsize = 12,
@@ -307,8 +359,8 @@ digraph "Diagram" {
           width = 1.2,
           height = 1.466,
         ];
-        "ProcessingStack/TriggerLambda" [
-          label = " TriggerLambda",
+        "ProcessingStack/TriggerStepFunctionLambda" [
+          label = "\nTriggerStepFunctionLa",
           fontsize = 12,
           image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Compute/64/Arch_AWS-Lambda_64@5x.png",
           imagescale = "true",
@@ -318,7 +370,7 @@ digraph "Diagram" {
           fixedsize = "true",
           labelloc = "b",
           width = 2,
-          height = 2.266,
+          height = 2.4819999999999998,
         ];
       }
     }
@@ -365,13 +417,31 @@ digraph "Diagram" {
   "ApiStack/getImageHandler" -> "ApiStack/lambdaS3Role" [
     dir = "both",
   ];
+  "ProcessingStack/TriggerLambda" -> "ProcessingStack/imageRekognitionRole" [
+    dir = "both",
+  ];
+  "ProcessingStack/TimestreamLambda" -> "ProcessingStack/timestreamRole" [
+    dir = "both",
+  ];
+  "ProcessingStack/smRole" -> "ProcessingStack/TriggerLambda" [
+    dir = "both",
+  ];
+  "ProcessingStack/smRole" -> "ProcessingStack/TimestreamLambda" [
+    dir = "both",
+  ];
+  "ProcessingStack/StateMachine" -> "ProcessingStack/TriggerLambda" [
+    dir = "both",
+  ];
+  "ProcessingStack/StateMachine" -> "ProcessingStack/TimestreamLambda" [
+    dir = "both",
+  ];
   "ProcessingStack/StateMachine" -> "ProcessingStack/smRole" [
     dir = "both",
   ];
-  "ProcessingStack/TriggerLambda" -> "ProcessingStack/StateMachine" [
+  "ProcessingStack/TriggerStepFunctionLambda" -> "ProcessingStack/StateMachine" [
     dir = "both",
   ];
-  "ProcessingStack/TriggerLambda" -> "ProcessingStack/getInventoryRole" [
+  "ProcessingStack/TriggerStepFunctionLambda" -> "ProcessingStack/getInventoryRole" [
     dir = "both",
   ];
 }

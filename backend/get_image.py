@@ -11,15 +11,21 @@ bucket = os.environ['BUCKET_NAME']
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-base_path = "images/generated/"
+BASE_PATH = "images/generated/"
 
 def handler(event, context):
+    """Returns presigned URL for retrieving image.
+    
+    :param: event: lambda event
+    :param context: lambda context
+    :return api_response: response of 200 or 500 with associated message / resposne
+    """
     try:
         logger.info('Getting image presigned url')
         raw_path = event['rawPath'].split("/")
         key_name = raw_path[-1]
         logger.info(f'Payload: {key_name}')
-        path = f"{base_path}{key_name}"
+        path = f"{BASE_PATH}{key_name}"
         logger.info(f'Path: {base_path}, file_name: {key_name}')
         response = generate_presigned_url(path, 3600)
         return  api_response(200, response)
