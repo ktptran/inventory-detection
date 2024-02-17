@@ -1,6 +1,5 @@
 """Get image given id of key name."""
 
-import json
 import logging
 import os
 
