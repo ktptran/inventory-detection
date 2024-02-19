@@ -104,6 +104,9 @@ export class ProcessingStack extends cdk.Stack {
 				cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
 					"AmazonS3FullAccess"
 				),
+				cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
+					"service-role/AWSLambdaBasicExecutionRole"
+				),
 			],
 		});
 
@@ -121,21 +124,19 @@ export class ProcessingStack extends cdk.Stack {
 			}
 		);
 
-		// TODO: Troubleshoot PutBucketNotificationConfigurationError
-		// const s3Bucket = cdk.aws_s3.Bucket.fromBucketName(
-		// 	this,
-		// 	"s3Bucket",
-		// 	`${environment}-${projectName}-${accountId}-${region}-bucket`
-		// );
-		// s3Bucket.addEventNotification(
-		// 	cdk.aws_s3.EventType.OBJECT_CREATED,
-		// 	new cdk.aws_s3_notifications.LambdaDestination(triggerStepFunctionLambda),
-		// 	{
-		// 		prefix: "images/generated/*",
-		// 	}
-		// );
-
-		// TODO: Custom resource for automatically running lambda
+		// S3 bucket Lambda trigger
+		const s3Bucket = cdk.aws_s3.Bucket.fromBucketName(
+			this,
+			"s3Bucket",
+			`${environment}-${projectName}-${accountId}-${region}-bucket`
+		);
+		s3Bucket.addEventNotification(
+			cdk.aws_s3.EventType.OBJECT_CREATED,
+			new cdk.aws_s3_notifications.LambdaDestination(triggerStepFunctionLambda),
+			{
+				prefix: "images/generated/",
+			}
+		);
 
 		// CloudFormation outputs
 		new cdk.CfnOutput(this, "StateMachineArn", {
