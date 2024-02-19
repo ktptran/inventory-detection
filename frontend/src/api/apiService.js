@@ -42,8 +42,10 @@ async function getImage(key_name) {
         headers: await returnHeaders(),
       },
     });
-    const response = await restOperation.response;
-    console.log('GET call succeeded: ', response);
+    const { body } = await restOperation.response;
+    const json = await body.json();
+    console.log('GET call succeeded: ', json);
+    return json;
   } catch (err) {
     console.error('GET call failed: ', err);
   }

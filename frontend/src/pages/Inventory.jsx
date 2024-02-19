@@ -9,28 +9,40 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import React, { useEffect, useState } from 'react';
 import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
-import { getInventory } from '../api/apiService';
-import Refrigerator from '../assets/example_image.jpg';
+import { getImage, getInventory } from '../api/apiService';
 
 function Inventory() {
   const [data, setData] = useState(null);
   const [entryValue, setEntryValue] = useState(null);
   const [entryLabel, setEntryLabel] = useState('Latest Entry');
   const [latestEntry, setLatestEntry] = useState(null);
+  const [image, setImage] = useState(null);
 
   const updateSelectedData = (e) => {
-    const value = e.activePayload[0].payload;
-    setEntryValue([
-      { name: 'Banana', count: value['banana'] },
-      { name: 'Apple', count: value['apple'] },
-      { name: 'Orange', count: value['orange'] },
-    ]);
-    setEntryLabel(value['time']);
+    async function getSelectedData() {
+      if (e && e.activePayload) {
+        const value = e.activePayload[0].payload;
+        const imageUrl = await getImage(value['key']);
+        setImage(imageUrl);
+        setEntryValue([
+          { name: 'Banana', count: value['banana'] },
+          { name: 'Apple', count: value['apple'] },
+          { name: 'Orange', count: value['orange'] },
+        ]);
+        setEntryLabel(value['time']);
+      }
+    }
+    getSelectedData();
   };
 
   const refreshData = () => {
-    setEntryLabel('Latest Entry');
-    setEntryValue(latestEntry);
+    async function refreshSelectedData() {
+      setEntryLabel('Latest Entry');
+      setEntryValue(createEntrySample(latestEntry));
+      const imageUrl = await getImage(latestEntry['key']);
+      setImage(imageUrl);
+    }
+    refreshSelectedData();
   };
 
   const createEntrySample = (entry) => {
@@ -45,11 +57,13 @@ function Inventory() {
     async function getData() {
       if (data === null) {
         const response = await getInventory();
-        // console.log(response);
-        const lastEntry = createEntrySample(response[response.length - 1]);
+        const lastEntry = response[response.length - 1];
+        const sample = createEntrySample(lastEntry);
         setLatestEntry(lastEntry);
-        setEntryValue(lastEntry);
+        setEntryValue(sample);
         setData(response);
+        const imageUrl = await getImage(lastEntry['key']);
+        setImage(imageUrl);
       }
     }
     getData();
@@ -59,7 +73,7 @@ function Inventory() {
     <Grid container spacing={2}>
       {data && <Description data={data} updateSelectedData={updateSelectedData} />}
       <Grid item xs={1}></Grid>
-      {data && <Entry entryValue={entryValue} entryLabel={entryLabel} refreshData={refreshData} />}
+      {data && <Entry entryValue={entryValue} entryLabel={entryLabel} refreshData={refreshData} image={image} />}
     </Grid>
   );
 }
@@ -90,7 +104,7 @@ function Description({ data, updateSelectedData }) {
   );
 }
 
-function Entry({ entryValue, entryLabel, refreshData }) {
+function Entry({ entryValue, entryLabel, refreshData, image }) {
   return (
     <Grid item xs={6}>
       <div>
@@ -124,7 +138,7 @@ function Entry({ entryValue, entryLabel, refreshData }) {
               </TableBody>
             </Table>
           </TableContainer>
-          <img src={Refrigerator} alt="latest" style={{ width: '200px', height: '400px' }} />
+          <img src={image} alt="latest" style={{ width: '200px', height: '400px' }} />
         </div>
       </div>
     </Grid>

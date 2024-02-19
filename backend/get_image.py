@@ -94,7 +94,7 @@ if __name__ == "__main__":
             "timeEpoch": 1583348638390
         },
         "pathParameters": {
-            "parameter1": "value1"
+            'key_name': 'undefined'
         },
         "isBase64Encoded": False,
         "stageVariables": {
