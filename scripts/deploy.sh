@@ -15,10 +15,10 @@ if [ -z ${cfn+x} ];
 fi
 
 # Deploy CDK
-# echo "Launching CDK application..."
-# cd $SCRIPT_DIR/../cdk
-# cdk synth
-# cdk deploy --all --require-approval never
+echo "Launching CDK application..."
+cd $SCRIPT_DIR/../cdk
+cdk synth
+cdk deploy --all --require-approval never
 
 # Retrieve frontend configurations for aws-exports
 AMPLIFY_EXPORT=$SCRIPT_DIR/../frontend/src/aws-exports.js
