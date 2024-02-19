@@ -89,6 +89,10 @@ function DraggableComponent(props) {
   const { targetRef, handleRef } = useDraggable({ controlStyle: true });
   const { src, alt, top, right } = props;
 
+  useEffect(() => {
+    console.log(targetRef);
+  }, [targetRef]);
+
   return (
     <div className="target" ref={targetRef}>
       <img src={src} ref={handleRef} className="fruit" alt={alt} style={{ top, right }} />

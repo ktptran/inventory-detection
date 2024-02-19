@@ -1,4 +1,5 @@
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -17,6 +18,7 @@ function Inventory() {
   const [entryLabel, setEntryLabel] = useState('Latest Entry');
   const [latestEntry, setLatestEntry] = useState(null);
   const [image, setImage] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const updateSelectedData = (e) => {
     async function getSelectedData() {
@@ -41,7 +43,9 @@ function Inventory() {
       setEntryValue(createEntrySample(latestEntry));
       const imageUrl = await getImage(latestEntry['key']);
       setImage(imageUrl);
+      setLoading(false);
     }
+    setLoading(true);
     refreshSelectedData();
   };
 
@@ -64,18 +68,27 @@ function Inventory() {
         setData(response);
         const imageUrl = await getImage(lastEntry['key']);
         setImage(imageUrl);
+        setLoading(false);
       }
     }
     getData();
   }, [data]);
 
-  return (
-    <Grid container spacing={2}>
-      {data && <Description data={data} updateSelectedData={updateSelectedData} />}
-      <Grid item xs={1}></Grid>
-      {data && <Entry entryValue={entryValue} entryLabel={entryLabel} refreshData={refreshData} image={image} />}
-    </Grid>
-  );
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '100px' }}>
+        <CircularProgress />
+      </div>
+    );
+  } else {
+    return (
+      <Grid container spacing={2}>
+        {data && <Description data={data} updateSelectedData={updateSelectedData} />}
+        <Grid item xs={1}></Grid>
+        {data && <Entry entryValue={entryValue} entryLabel={entryLabel} refreshData={refreshData} image={image} />}
+      </Grid>
+    );
+  }
 }
 
 function Description({ data, updateSelectedData }) {
