@@ -1,4 +1,5 @@
 import * as cdk from "aws-cdk-lib";
+import { PolicyStatement } from "aws-cdk-lib/aws-iam";
 import * as sfn from "aws-cdk-lib/aws-stepfunctions";
 import { Construct } from "constructs";
 
@@ -7,6 +8,9 @@ export class ProcessingStack extends cdk.Stack {
 		super(scope, id, props);
 
 		const { projectName, environment, accountId, region } = props;
+
+		const databaseName = `${environment}-${projectName}-db`;
+		const tableName = `${environment}-${projectName}-table`;
 
 		const imageRekognitionRole = new cdk.aws_iam.Role(
 			this,
@@ -41,12 +45,25 @@ export class ProcessingStack extends cdk.Stack {
 
 		const timestreamRole = new cdk.aws_iam.Role(this, "timestreamRole", {
 			assumedBy: new cdk.aws_iam.ServicePrincipal("lambda.amazonaws.com"),
-			managedPolicies: [
-				cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
-					"AmazonTimestreamFullAccess"
-				),
-			],
 		});
+
+		timestreamRole.addToPolicy(
+			new PolicyStatement({
+				effect: cdk.aws_iam.Effect.ALLOW,
+				resources: [
+					`arn:aws:timestream:${region}:${this.account}:database/${databaseName}/table/${tableName}`,
+				],
+				actions: ["timestream:WriteRecords"],
+			})
+		);
+
+		timestreamRole.addToPolicy(
+			new PolicyStatement({
+				effect: cdk.aws_iam.Effect.ALLOW,
+				resources: ["*"],
+				actions: ["timestream:DescribeEndpoints"],
+			})
+		);
 
 		const timestreamLambda = new cdk.aws_lambda.Function(
 			this,
@@ -85,7 +102,6 @@ export class ProcessingStack extends cdk.Stack {
 
 		const smRole = new cdk.aws_iam.Role(this, "smRole", {
 			assumedBy: new cdk.aws_iam.ServicePrincipal("states.amazonaws.com"),
-			managedPolicies: [],
 		});
 
 		const sm = new sfn.StateMachine(this, "StateMachine", {
@@ -99,16 +115,18 @@ export class ProcessingStack extends cdk.Stack {
 			assumedBy: new cdk.aws_iam.ServicePrincipal("lambda.amazonaws.com"),
 			managedPolicies: [
 				cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
-					"AWSStepFunctionsFullAccess"
-				),
-				cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
-					"AmazonS3FullAccess"
-				),
-				cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
 					"service-role/AWSLambdaBasicExecutionRole"
 				),
 			],
 		});
+
+		triggerLambdaRole.addToPolicy(
+			new PolicyStatement({
+				effect: cdk.aws_iam.Effect.ALLOW,
+				resources: [sm.stateMachineArn],
+				actions: ["states:StartExecution"],
+			})
+		);
 
 		const triggerStepFunctionLambda = new cdk.aws_lambda.Function(
 			this,
