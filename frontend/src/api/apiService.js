@@ -1,8 +1,8 @@
-import { put, get } from 'aws-amplify/api';
+import { get, put } from 'aws-amplify/api';
 import { fetchAuthSession } from 'aws-amplify/auth';
 
 async function returnHeaders() {
-  const authToken = (await fetchAuthSession()).tokens?.idToken?.toString();
+  const authToken = (await fetchAuthSession()).tokens?.accessToken?.toString();
   return {
     Authorization: authToken,
     'Access-Control-Allow-Credentials': true,
@@ -49,4 +49,4 @@ async function getImage(key_name) {
   }
 }
 
-export { putImage, getImage };
+export { getImage, putImage };

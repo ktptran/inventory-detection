@@ -98,17 +98,13 @@ export class AuthStack extends cdk.Stack {
 			})
 		);
 
-		const defaultPolicy = new cdk.aws_cognito.CfnIdentityPoolRoleAttachment(
-			this,
-			"DefaultValid",
-			{
-				identityPoolId: identityPool.ref,
-				roles: {
-					unauthenticated: unauthenticatedRole.roleArn,
-					authenticated: authenticatedRole.roleArn,
-				},
-			}
-		);
+		new cdk.aws_cognito.CfnIdentityPoolRoleAttachment(this, "DefaultValid", {
+			identityPoolId: identityPool.ref,
+			roles: {
+				unauthenticated: unauthenticatedRole.roleArn,
+				authenticated: authenticatedRole.roleArn,
+			},
+		});
 
 		new cdk.CfnOutput(this, "CognitoRegion", {
 			value: this.userPool.env.region,
