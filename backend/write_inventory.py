@@ -1,4 +1,4 @@
-"""Writing timestream data in step function"""
+"""Writing inventory data into timestream table using step function"""
 
 
 import logging
@@ -11,12 +11,12 @@ logger.setLevel(logging.INFO)
 
 
 def handler(event, context):
-    """Writes timestream data
+    """Writes inventory data
     
     :param event: input event from step function
     :context context: event context
     """
-    logger.info("Writing records into timestream database")
+    logger.info("Writing inventory records into timestream database")
     dimensions = [
         {'Name': 'region', 'Value': event["awsRegion"]},
         {'Name': 'bucket', 'Value': event["s3"]["bucket"]["name"]},
@@ -34,7 +34,7 @@ def handler(event, context):
             "MeasureValue": str(event["taskresult"]["Payload"][label])
         })
     try:
-        result = write_records(records, common_attributes)
+        result = write_records(records, common_attributes, 1)
         logger.info(f"Ingested: records {records}, common_attributes: {common_attributes}")
         logger.info(result)
         return result

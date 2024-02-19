@@ -5,6 +5,7 @@ export class StorageStack extends cdk.Stack {
 	public bucket: cdk.aws_s3.Bucket;
 	public database: cdk.aws_timestream.CfnDatabase;
 	public table: cdk.aws_timestream.CfnTable;
+	public positionTable: cdk.aws_timestream.CfnTable;
 
 	constructor(scope: Construct, id: string, props?: any) {
 		super(scope, id, props);
@@ -23,6 +24,15 @@ export class StorageStack extends cdk.Stack {
 			databaseName: `${environment}-${projectName}-db`,
 			tableName: `${environment}-${projectName}-table`,
 		});
+
+		this.positionTable = new cdk.aws_timestream.CfnTable(
+			this,
+			"PositionTable",
+			{
+				databaseName: `${environment}-${projectName}-db`,
+				tableName: `${environment}-${projectName}-positTable`,
+			}
+		);
 
 		this.table.addDependency(this.database);
 

@@ -21,6 +21,7 @@ export class ApiStack extends cdk.Stack {
 		const bucketName = `${environment}-${projectName}-${accountId}-${region}-bucket`;
 		const databaseName = `${environment}-${projectName}-db`;
 		const tableName = `${environment}-${projectName}-table`;
+		const positTableName = `${environment}-${projectName}-positTable`;
 
 		// API Gateway
 		const authorizer = new HttpUserPoolAuthorizer("UserAuthorizer", userPool);
@@ -83,7 +84,6 @@ export class ApiStack extends cdk.Stack {
 				),
 			],
 		});
-
 		getInventoryRole.addToPolicy(
 			new cdk.aws_iam.PolicyStatement({
 				effect: cdk.aws_iam.Effect.ALLOW,
@@ -98,17 +98,59 @@ export class ApiStack extends cdk.Stack {
 			})
 		);
 
-		getInventoryRole.addToPolicy(
+		const timestreamDescribeEndpointsPolicy = new cdk.aws_iam.PolicyStatement({
+			effect: cdk.aws_iam.Effect.ALLOW,
+			resources: ["*"],
+			actions: [
+				"timestream:DescribeEndpoints",
+				"timestream:SelectValues",
+				"timestream:CancelQuery",
+			],
+		});
+		getInventoryRole.addToPolicy(timestreamDescribeEndpointsPolicy);
+
+		const positionReadRole = new cdk.aws_iam.Role(this, "positionReadRole", {
+			assumedBy: new cdk.aws_iam.ServicePrincipal("lambda.amazonaws.com"),
+			managedPolicies: [
+				cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
+					"service-role/AWSLambdaBasicExecutionRole"
+				),
+			],
+		});
+		positionReadRole.addToPolicy(
 			new cdk.aws_iam.PolicyStatement({
 				effect: cdk.aws_iam.Effect.ALLOW,
-				resources: ["*"],
+				resources: [
+					`arn:aws:timestream:${region}:${this.account}:database/${databaseName}/table/${positTableName}`,
+				],
 				actions: [
-					"timestream:DescribeEndpoints",
-					"timestream:SelectValues",
-					"timestream:CancelQuery",
+					"timestream:Select",
+					"timestream:DescribeTable",
+					"timestream:ListMeasures",
 				],
 			})
 		);
+		positionReadRole.addToPolicy(timestreamDescribeEndpointsPolicy);
+
+		const positionWriteRole = new cdk.aws_iam.Role(this, "positionWriteRole", {
+			assumedBy: new cdk.aws_iam.ServicePrincipal("lambda.amazonaws.com"),
+			managedPolicies: [
+				cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
+					"service-role/AWSLambdaBasicExecutionRole"
+				),
+			],
+		});
+
+		positionWriteRole.addToPolicy(
+			new cdk.aws_iam.PolicyStatement({
+				effect: cdk.aws_iam.Effect.ALLOW,
+				resources: [
+					`arn:aws:timestream:${region}:${this.account}:database/${databaseName}/table/${positTableName}`,
+				],
+				actions: ["timestream:WriteRecords"],
+			})
+		);
+		positionWriteRole.addToPolicy(timestreamDescribeEndpointsPolicy);
 
 		/**
 		 * Lambda functions
@@ -153,6 +195,37 @@ export class ApiStack extends cdk.Stack {
 			role: lambdaS3Role,
 		});
 
+		// PUT locations of images
+		const putImagePositionHandler = new lambda.Function(
+			this,
+			"putImagePositionHandler",
+			{
+				code: lambda.Code.fromAsset("../backend"),
+				handler: "write_position.handler",
+				runtime: lambda.Runtime.PYTHON_3_12,
+				environment: {
+					DATABASE_NAME: databaseName,
+					POSIT_TABLE_NAME: positTableName,
+				},
+				role: positionWriteRole,
+			}
+		);
+
+		const getImagePositionHandler = new lambda.Function(
+			this,
+			"getImagePositionHandler",
+			{
+				code: lambda.Code.fromAsset("../backend"),
+				handler: "get_position.handler",
+				runtime: lambda.Runtime.PYTHON_3_12,
+				environment: {
+					DATABASE_NAME: databaseName,
+					POSIT_TABLE_NAME: positTableName,
+				},
+				role: positionReadRole,
+			}
+		);
+
 		/**
 		 * Lambda & API Gateway integrations
 		 */
@@ -190,6 +263,30 @@ export class ApiStack extends cdk.Stack {
 			path: "/image/{key_name}",
 			methods: [apigw.HttpMethod.GET],
 			integration: getImageProxy,
+		});
+
+		const putImagePositionproxy =
+			new cdk.aws_apigatewayv2_integrations.HttpLambdaIntegration(
+				"getImagePositionIntegration",
+				putImagePositionHandler
+			);
+
+		httpApi.addRoutes({
+			path: "/position",
+			methods: [apigw.HttpMethod.POST, apigw.HttpMethod.PUT],
+			integration: putImagePositionproxy,
+		});
+
+		const getImagePositionProxy =
+			new cdk.aws_apigatewayv2_integrations.HttpLambdaIntegration(
+				"getImagePositionIntegration",
+				getImagePositionHandler
+			);
+
+		httpApi.addRoutes({
+			path: "/position",
+			methods: [apigw.HttpMethod.GET],
+			integration: getImagePositionProxy,
 		});
 
 		// Cloudformation Outputs

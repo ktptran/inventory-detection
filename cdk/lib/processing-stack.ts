@@ -70,7 +70,7 @@ export class ProcessingStack extends cdk.Stack {
 			"TimestreamLambda",
 			{
 				code: cdk.aws_lambda.Code.fromAsset("../backend"),
-				handler: "write_timestream.handler",
+				handler: "write_inventory.handler",
 				runtime: cdk.aws_lambda.Runtime.PYTHON_3_12,
 				role: timestreamRole,
 				environment: {
