@@ -36,7 +36,7 @@ async function putImage(image, uuid) {
 async function getImage(key_name) {
   try {
     const restOperation = get({
-      apiname: 'HttpApi',
+      apiName: 'HttpApi',
       path: `/image/${key_name}`,
       options: {
         headers: await returnHeaders(),
@@ -49,4 +49,22 @@ async function getImage(key_name) {
   }
 }
 
-export { getImage, putImage };
+async function getInventory() {
+  try {
+    const restOperation = get({
+      apiName: 'HttpApi',
+      path: '/inventory',
+      options: {
+        headers: await returnHeaders(),
+      },
+    });
+    const { body } = await restOperation.response;
+    const json = await body.json();
+    // console.log('GET call succeeded: ', json);
+    return json;
+  } catch (err) {
+    console.error('GET call failed: ', err);
+  }
+}
+
+export { getImage, getInventory, putImage };

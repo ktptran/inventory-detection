@@ -205,7 +205,7 @@ export class ApiStack extends cdk.Stack {
 				runtime: lambda.Runtime.PYTHON_3_12,
 				environment: {
 					DATABASE_NAME: databaseName,
-					POSIT_TABLE_NAME: positTableName,
+					TABLE_NAME: positTableName,
 				},
 				role: positionWriteRole,
 			}
@@ -220,7 +220,7 @@ export class ApiStack extends cdk.Stack {
 				runtime: lambda.Runtime.PYTHON_3_12,
 				environment: {
 					DATABASE_NAME: databaseName,
-					POSIT_TABLE_NAME: positTableName,
+					TABLE_NAME: positTableName,
 				},
 				role: positionReadRole,
 			}

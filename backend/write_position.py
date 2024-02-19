@@ -31,7 +31,7 @@ def handler(event, context):
             "MeasureValue": "",
         })
     try:
-        result = write_records(records, common_attributes, 0)
+        result = write_records(records, common_attributes)
         logger.info(f"Ingested: records {records}, common_attributes: {common_attributes}")
         logger.info(result)
         return result

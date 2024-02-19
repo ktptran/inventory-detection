@@ -1,43 +1,43 @@
 {
   "initialRecordData": [
     {
-      "name": "15:00",
+      "time": "15:00",
       "orange": 4,
       "banana": 2,
       "apple": 2
     },
     {
-      "name": "16:00",
+      "time": "16:00",
       "orange": 3,
       "banana": 1,
       "apple": 2
     },
     {
-      "name": "17:00",
+      "time": "17:00",
       "orange": 2,
       "banana": 9,
       "apple": 2
     },
     {
-      "name": "18:00",
+      "time": "18:00",
       "orange": 2,
       "banana": 3,
       "apple": 2
     },
     {
-      "name": "19:00",
+      "time": "19:00",
       "orange": 1,
       "banana": 4,
       "apple": 2
     },
     {
-      "name": "20:00",
+      "time": "20:00",
       "orange": 2,
       "banana": 3,
       "apple": 2
     },
     {
-      "name": "21:00",
+      "time": "21:00",
       "orange": 3,
       "banana": 4,
       "apple": 2

@@ -1,4 +1,6 @@
 """Module providing image processing and api response."""
+import json
+
 
 def extract_file_extension(base64_encoded_file):
     """Extracts image extension from base64 encoded file data.
@@ -24,7 +26,7 @@ def api_response(status_code, body):
     return {
         "statusCode": status_code,
         "headers": {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         },
-        "body": body
+        "body": json.dumps(body)
     }

@@ -10,9 +10,8 @@ read_client = boto3.client('timestream-query')
 
 DATABASE_NAME = os.environ['DATABASE_NAME']
 TABLE_NAME = os.environ['TABLE_NAME']
-POSIT_TABLE_NAME = os.environ['POSIT_TABLE_NAME']
 
-def write_records(records, common_attributes, table):
+def write_records(records, common_attributes):
     """Writes record to Timestream table.
     
     :param records: record of information
@@ -21,7 +20,7 @@ def write_records(records, common_attributes, table):
     try:
         response = write_client.write_records(
             DatabaseName=DATABASE_NAME,
-            TableName=TABLE_NAME if table == 1 else POSIT_TABLE_NAME,
+            TableName=TABLE_NAME,
             CommonAttributes=common_attributes,
             Records=records,
         )

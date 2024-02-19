@@ -25,7 +25,7 @@ def handler(event, context):
         for entry_index in range(int(len(rows) / 3)):
             start_index = entry_index * 3
             entry = {
-                "time": rows[start_index]['Data'][0]['ScalarValue'],
+                "time": rows[start_index]['Data'][0]['ScalarValue'][:19],
                 "key": rows[start_index]['Data'][1]['ScalarValue'].split("/")[2],
                 "orange": rows[start_index]['Data'][3]['ScalarValue'],
                 "banana": rows[start_index + 1]['Data'][3]['ScalarValue'],
@@ -41,3 +41,4 @@ def handler(event, context):
 if __name__ == "__main__":
     event = {}
     print(handler(event, {}))
+

@@ -1,21 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import React, { useEffect, useState } from 'react';
+import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
+import { getInventory } from '../api/apiService';
 import Refrigerator from '../assets/example_image.jpg';
-import SampleData from '../data/sampleData.json';
 
 function Inventory() {
   const [data, setData] = useState(null);
   const [entryValue, setEntryValue] = useState(null);
   const [entryLabel, setEntryLabel] = useState('Latest Entry');
+  const [latestEntry, setLatestEntry] = useState(null);
 
   const updateSelectedData = (e) => {
     const value = e.activePayload[0].payload;
@@ -24,19 +25,34 @@ function Inventory() {
       { name: 'Apple', count: value['apple'] },
       { name: 'Orange', count: value['orange'] },
     ]);
-    setEntryLabel(value['name']);
+    setEntryLabel(value['time']);
   };
 
   const refreshData = () => {
     setEntryLabel('Latest Entry');
-    setEntryValue(SampleData['latestEntrySample']);
+    setEntryValue(latestEntry);
+  };
+
+  const createEntrySample = (entry) => {
+    return [
+      { name: 'Banana', count: entry['banana'] },
+      { name: 'Apple', count: entry['apple'] },
+      { name: 'Orange', count: entry['orange'] },
+    ];
   };
 
   useEffect(() => {
-    if (data === null) {
-      setEntryValue(SampleData['latestEntrySample']);
-      setData(SampleData['initialRecordData']);
+    async function getData() {
+      if (data === null) {
+        const response = await getInventory();
+        // console.log(response);
+        const lastEntry = createEntrySample(response[response.length - 1]);
+        setLatestEntry(lastEntry);
+        setEntryValue(lastEntry);
+        setData(response);
+      }
     }
+    getData();
   }, [data]);
 
   return (
@@ -61,7 +77,7 @@ function Description({ data, updateSelectedData }) {
       <div style={{ padding: '20px' }}>
         <LineChart width={600} height={350} data={data} onClick={(e) => updateSelectedData(e)}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
+          <XAxis dataKey="time" />
           <YAxis />
           <Tooltip />
           <Legend />
