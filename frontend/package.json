@@ -1,5 +1,6 @@
 {
-	"name": "frontend-template",
+	"name": "inventory-detection",
+	"homepage": "/login",
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {

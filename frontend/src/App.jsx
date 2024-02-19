@@ -1,15 +1,15 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { Route, Routes, BrowserRouter as Router, Navigate, useNavigate } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
+import React, { useMemo, useState } from 'react';
+import { Route, Routes } from 'react-router-dom';
 
-import NavBar from './components/NavBar';
-import Footer from './components/Footer';
 import Drawer from './components/Drawer';
+import Footer from './components/Footer';
+import NavBar from './components/NavBar';
 
-import Refrigerator from './pages/Refrigerator';
-import NoMatch from './pages/NoMatch';
-import Login from './pages/Login';
 import Inventory from './pages/Inventory';
+import Login from './pages/Login';
+import NoMatch from './pages/NoMatch';
+import Refrigerator from './pages/Refrigerator';
 
 import { UserContext } from './context/UserContext';
 // import { fetchAuthSession } from 'aws-amplify/auth';
