@@ -35,7 +35,7 @@ def query_inventory():
     :return response: boto3 response
     """
     response = read_client.query(
-        QueryString=f'SELECT time, key, measure_value::varchar  FROM "{DATABASE_NAME}"."{TABLE_NAME}" ORDER BY time DESC',
+        QueryString=f'SELECT time, key, measure_name, measure_value::varchar  FROM "{DATABASE_NAME}"."{TABLE_NAME}" ORDER BY time, measure_name DESC',
     )
     return response
 

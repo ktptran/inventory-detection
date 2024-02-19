@@ -26,7 +26,7 @@ def handler(event, context):
         key_name = raw_path[-1]
         logger.info(f'Payload: {key_name}')
         path = f"{BASE_PATH}{key_name}"
-        logger.info(f'Path: {base_path}, file_name: {key_name}')
+        logger.info(f'Path: {BASE_PATH}, file_name: {key_name}')
         response = generate_presigned_url(path, 3600)
         return  api_response(200, response)
     except ClientError as e:
