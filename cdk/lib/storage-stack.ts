@@ -25,15 +25,6 @@ export class StorageStack extends cdk.Stack {
 			tableName: `${environment}-${projectName}-table`,
 		});
 
-		this.positionTable = new cdk.aws_timestream.CfnTable(
-			this,
-			"PositionTable",
-			{
-				databaseName: `${environment}-${projectName}-db`,
-				tableName: `${environment}-${projectName}-positTable`,
-			}
-		);
-
 		this.table.addDependency(this.database);
 
 		new cdk.CfnOutput(this, "ImageBucket", {

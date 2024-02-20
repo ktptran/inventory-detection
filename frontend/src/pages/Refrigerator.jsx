@@ -89,13 +89,11 @@ function DraggableComponent(props) {
   const { targetRef, handleRef } = useDraggable({ controlStyle: true });
   const { src, alt, top, right } = props;
 
-  useEffect(() => {
-    console.log(targetRef);
-  }, [targetRef]);
-
   return (
-    <div className="target" ref={targetRef}>
-      <img src={src} ref={handleRef} className="fruit" alt={alt} style={{ top, right }} />
+    <div>
+      <div className="target" ref={targetRef}>
+        <img src={src} ref={handleRef} className="fruit" alt={alt} style={{ top, right }} />
+      </div>
     </div>
   );
 }
@@ -114,10 +112,7 @@ function Refrigerator({ refrigeratorRef }) {
   };
 
   useEffect(() => {
-    // Initially pull in data from outside source
-    // If source is null / no response then set initial object case
     setDefaultPosition(data['initialFruitData']);
-    // TODO: Update state once it is moved
   }, []);
 
   return (

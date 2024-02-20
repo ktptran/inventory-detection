@@ -51,8 +51,8 @@
   "initialFruitData": [
     {
       "alt": "apple-1",
-      "top": 0,
-      "right": 100
+      "top": -43,
+      "right": -132
     },
     {
       "alt": "orange-1",
