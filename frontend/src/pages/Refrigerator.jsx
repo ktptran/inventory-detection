@@ -1,5 +1,5 @@
 import Grid from '@mui/material/Grid';
-import React, { createRef, useEffect, useRef, useState } from 'react';
+import React, { createRef, useRef, useState } from 'react';
 
 import apple from '../assets/apple.png';
 import banana from '../assets/banana.png';
@@ -9,8 +9,6 @@ import door from '../assets/refrigerator-door.png';
 import { Link } from 'react-router-dom';
 import { useDraggable } from 'use-draggable';
 import { useScreenshot } from 'use-react-screenshot';
-import { putImage } from '../api/apiService';
-import data from '../data/sampleData.json';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -24,10 +22,16 @@ function Home() {
 
   const upload = async (image, { name = 'img', extension = 'jpg' } = {}) => {
     const uuid = uuidv4();
-    await putImage(image, uuid);
+    const a = document.createElement('a');
+    // Base 64 image URL
+    a.href = image;
+    a.download = `${uuid}.jpg`;
+    a.click();
+    // await putImage(image, uuid);
   };
 
   const uploadScreenShot = () => {
+    console.log(refrigeratorRef.current);
     takeScreenshot(refrigeratorRef.current).then(upload);
   };
 
@@ -87,20 +91,16 @@ function Door({ uploadScreenShot }) {
 
 function DraggableComponent(props) {
   const { targetRef, handleRef } = useDraggable({ controlStyle: true });
-  const { src, alt, top, right } = props;
+  const { src, alt } = props;
 
   return (
-    <div>
-      <div className="target" ref={targetRef}>
-        <img src={src} ref={handleRef} className="fruit" alt={alt} style={{ top, right }} />
-      </div>
+    <div className="target" ref={targetRef}>
+      <img src={src} ref={handleRef} className="fruit" alt={alt} />
     </div>
   );
 }
 
 function Refrigerator({ refrigeratorRef }) {
-  const [defaultPosition, setDefaultPosition] = useState([]);
-
   const getSrc = (alt) => {
     if (alt.includes('apple')) {
       return apple;
@@ -111,16 +111,24 @@ function Refrigerator({ refrigeratorRef }) {
     }
   };
 
-  useEffect(() => {
-    setDefaultPosition(data['initialFruitData']);
-  }, []);
-
   return (
     <div className="fridge" ref={refrigeratorRef}>
-      {defaultPosition.map((value, index) => {
-        const { alt, top, right } = value;
-        return <DraggableComponent src={getSrc(alt)} alt={alt} top={`${top}px`} right={`${right}px`} key={index} />;
-      })}
+      <div className="shelf">
+        <DraggableComponent src={apple} alt="apple-1" />
+        <DraggableComponent src={orange} alt="orange-1" />
+      </div>
+      <div className="shelf">
+        <DraggableComponent src={orange} alt="orange-2" />
+        <DraggableComponent src={apple} alt="apple-2" />
+      </div>
+      <div className="shelf">
+        <DraggableComponent src={banana} alt="banana-1" />
+        <DraggableComponent src={banana} alt="banana-2" />
+      </div>
+      <div className="shelf">
+        <DraggableComponent src={banana} alt="banana-3" />
+        <DraggableComponent src={orange} alt="orange-4" />
+      </div>
     </div>
   );
 }

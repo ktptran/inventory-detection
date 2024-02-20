@@ -47,47 +47,5 @@
     { "name": "Banana", "count": 1 },
     { "name": "Apple", "count": 2 },
     { "name": "Orange", "count": 3 }
-  ],
-  "initialFruitData": [
-    {
-      "alt": "apple-1",
-      "top": -43,
-      "right": -132
-    },
-    {
-      "alt": "orange-1",
-      "top": 0,
-      "right": -20
-    },
-    {
-      "alt": "orange-2",
-      "top": 110,
-      "right": 100
-    },
-    {
-      "alt": "apple-2",
-      "top": 110,
-      "right": -20
-    },
-    {
-      "alt": "banana-1",
-      "top": 220,
-      "right": 100
-    },
-    {
-      "alt": "banana-2",
-      "top": 220,
-      "right": -20
-    },
-    {
-      "alt": "banana-3",
-      "top": 330,
-      "right": 100
-    },
-    {
-      "alt": "orange-31",
-      "top": 330,
-      "right": -20
-    }
   ]
 }
