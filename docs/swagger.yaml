@@ -1,0 +1,182 @@
+openapi: 3.0.3
+info:
+  title: Inventory Detection
+  description: |-
+    This project creates an inventory detection system using Amazon Rekognition and AWS serverless services.
+  contact:
+    email: kevintptran@gmail.com
+  version: 1.0.11
+externalDocs:
+  description: Github Link
+  url: https://github.com/ktptran/inventory-detection
+tags:
+  - name: Inventory
+    description: Operations about overall inventory
+  - name: Image
+    description: Operations about images
+
+paths:
+  /inventory:
+    get:
+      tags:
+        - Inventory
+      summary: Get historical inventory
+      operationId: getInventory
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "400":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+  /image/{key_name}:
+    get:
+      tags:
+        - Image
+      summary: Get image with key name
+      operationId: getImage
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "400":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+  /image:
+    put:
+      tags:
+        - Image
+      summary: Create image
+      description: Creating a new image when closing the fridge
+      operationId: putImage
+      requestBody:
+        description: Created put object
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Image"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "400":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+
+    post:
+      tags:
+        - Image
+      summary: Create image
+      description: Creating a new image when closing the fridge
+      operationId: putImage
+      security:
+        - BasicAuth: [write]
+      requestBody:
+        description: Created put object
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Image"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "400":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    Image:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        createdAt:
+          type: string
+          example: 2006-10-25T14:30:59Z
+        name:
+          type: string
+          example: Honeycomb Single Beeswax Wrap
+        sku:
+          type: string
+          example: HNY-S
+        category:
+          $ref: "#/components/schemas/Category"
+        stockStatus:
+          type: boolean
+          example: true
+        inStock:
+          type: number
+          example: 599.425
+        availableStock:
+          type: number
+          example: 487.425
+        tags:
+          type: array
+          items:
+            $ref: "#/components/schemas/Tag"
+    ApiResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          example: 4XX
+        body:
+          type: string
+          example: "Example response"
