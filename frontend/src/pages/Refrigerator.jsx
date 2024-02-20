@@ -9,6 +9,7 @@ import door from '../assets/refrigerator-door.png';
 import { Link } from 'react-router-dom';
 import { useDraggable } from 'use-draggable';
 import { useScreenshot } from 'use-react-screenshot';
+import { putImage } from '../api/apiService';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -22,12 +23,12 @@ function Home() {
 
   const upload = async (image, { name = 'img', extension = 'jpg' } = {}) => {
     const uuid = uuidv4();
-    const a = document.createElement('a');
+    await putImage(image, uuid);
     // Base 64 image URL
-    a.href = image;
-    a.download = `${uuid}.jpg`;
-    a.click();
-    // await putImage(image, uuid);
+    // const a = document.createElement('a');
+    // a.href = image;
+    // a.download = `${uuid}.jpg`;
+    // a.click();
   };
 
   const uploadScreenShot = () => {
@@ -101,15 +102,15 @@ function DraggableComponent(props) {
 }
 
 function Refrigerator({ refrigeratorRef }) {
-  const getSrc = (alt) => {
-    if (alt.includes('apple')) {
-      return apple;
-    } else if (alt.includes('orange')) {
-      return orange;
-    } else {
-      return banana;
-    }
-  };
+  // const getSrc = (alt) => {
+  //   if (alt.includes('apple')) {
+  //     return apple;
+  //   } else if (alt.includes('orange')) {
+  //     return orange;
+  //   } else {
+  //     return banana;
+  //   }
+  // };
 
   return (
     <div className="fridge" ref={refrigeratorRef}>
