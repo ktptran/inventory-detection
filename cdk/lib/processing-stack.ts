@@ -9,6 +9,7 @@ export class ProcessingStack extends cdk.Stack {
 
 		const { projectName, environment, accountId, region } = props;
 
+		const bucketName = `${environment}-${projectName}-${accountId}-${region}-bucket`;
 		const databaseName = `${environment}-${projectName}-db`;
 		const tableName = `${environment}-${projectName}-table`;
 
@@ -23,6 +24,9 @@ export class ProcessingStack extends cdk.Stack {
 					),
 					cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
 						"service-role/AWSLambdaBasicExecutionRole"
+					),
+					cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName(
+						"AmazonS3ReadOnlyAccess"
 					),
 				],
 			}

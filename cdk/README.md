@@ -4,6 +4,12 @@ This is a project for CDK development with TypeScript. This deploys the associat
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
+## Architecture Overview
+
+The following resources are deployed when launching the CDK application.
+
+![Architecture Diagram](diagram.png)
+
 ## Useful commands
 
 - `npm run build` compile typescript to js

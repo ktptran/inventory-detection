@@ -32,7 +32,6 @@ function Home() {
   };
 
   const uploadScreenShot = () => {
-    console.log(refrigeratorRef.current);
     takeScreenshot(refrigeratorRef.current).then(upload);
   };
 

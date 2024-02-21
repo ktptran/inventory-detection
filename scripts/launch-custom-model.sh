@@ -49,8 +49,8 @@ echo "Project version training completed: $PROJECT_ARN"
 
 # Starting Amazon rekognition project version
 echo "Starting project version..."
-aws rekognition start-project-version --project-version-arn $PROJECT_VERSION_ARN
-aws rekognition wait project-version-running-completed --project-arn $PROJECT_ARN
+aws rekognition start-project-version --project-version-arn $PROJECT_VERSION_ARN --min-inference-units 1
+aws rekognition wait project-version-running --project-arn $PROJECT_ARN
 echo "Project version: $PROJECT_VERSION_ARN completed"
 
 # Update Lambda with project ARN

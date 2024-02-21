@@ -38,7 +38,7 @@ sed -i -e "s/%COGNITO_USER_POOL_WEB_CLIENT_ID%/$COGNITO_USER_POOL_WEB_CLIENT/g" 
 sed -i -e "s,%API_ENDPOINT%,$HTTP_API_ENDPOINT,g" $AMPLIFY_EXPORT
 
 # Deploy rekognition
-# bash $SCRIPT_DIR/rekognition-data.sh
+. $SCRIPT_DIR/launch-custom-model.sh
 
 # Deploy frontend to S3 bucket
 BUCKET_NAME=$(aws cloudformation describe-stacks --stack-name WebStack --query 'Stacks[0].Outputs[?OutputKey==`SiteBucketName`].OutputValue' --output text)
@@ -46,5 +46,7 @@ cd $SCRIPT_DIR/../frontend/ && npm run build
 aws s3 cp $SCRIPT_DIR/../frontend/build s3://$BUCKET_NAME/ --recursive
 
 # Return to root project directory
+CLOUDFRONT_URL=$(aws cloudformation describe-stacks --stack-name WebStack --query 'Stacks[0].Outputs[?OutputKey==`CloudFrontDistributionDomainName`].OutputValue' --output text)
 echo "Changing back to root project directory"
 cd $SCRIPT_DIR/../
+echo "Your application is ready at: $CLOUDFRONT_URL"

@@ -16,7 +16,7 @@ This project provides a proof of concept view of recording down the inventory au
 1. Record the inventory within seconds
 2. Web platform to view the configuration as needed
 
-## Deployment
+## Launch Configurations
 
 ### Prerequisites
 
@@ -52,6 +52,20 @@ Once you are finished using the project, use the following command to delete the
 ./scripts/teardown.sh
 ```
 
+## Demo
+
+### Recording Inventory
+
+After logging into the system, open the refrigerator and move around the fruits. Once you close the fridge, a snapshot will be saved and analzyed to record.
+
+![Refrigerator](docs/assets/refrigerator.png)
+
+### Historical View of Inventory
+
+With a few entries, navigate to the inventory page through the sidebar. Here you can view the inventory at any specific time and retrieve its associated image.
+
+![Inventory](docs/assets/inventory.png)
+
 ## Architecture Overview
 
 ### Code Layout
@@ -72,8 +86,26 @@ Once you are finished using the project, use the following command to delete the
 
 **Amazon Timestream**
 
-AAmazon Timestream is a fast, scalable, serverless managed time series database service for Internet of Things (IoT) and operational applications. Since this is an inventory management system looking at stock over time, Amazon Timestream was a valid option to use.
+Amazon Timestream is a fast, scalable, serverless managed time series database service for Internet of Things (IoT) and operational applications. Since this is an inventory management system looking at stock over time, Amazon Timestream was a valid option to use.
 
 **Amazon Rekognition**
 
 Amazon Rekognition offers pre-trained and customizable computer vision (CV) capabilities to extract information and insights from your images and videos. This is the main driver for identifying inventory through our trained custom model.
+
+## Future State
+
+### Expanding Scope
+
+This project can be expanded with the following:
+
+1. Rekognition model accuracy = currently there are only 200 images to train the model, but this still produces errors sometimes. Including more images in both the testing and training dataset increases our accuracy. The model images were kept low to save on cost.
+2. IoT ingestion = instead of using a web application, using an IoT camera and services such as AWS IoT Core + AWS IoT GreenGrass would scale this further to a full solution.
+3. Inventory prediction = Using the historical data we can use Amazon Forecast to help predict the inventory of fruits. This can potentially be used to help predict input of stock for larger applications.
+
+### Optimization and Bugs
+
+The following are implementation bugs for improvements:
+
+1. User state intact when refreshing web console.
+2. Authentication / authorization for API gateway and routes
+3. AWS WAF for DDoS and SQL injection protection
