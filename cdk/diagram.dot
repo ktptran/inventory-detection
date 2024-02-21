@@ -399,6 +399,58 @@ digraph "Diagram" {
           height = 1.466,
         ];
       }
+      subgraph "cluster-SubGraph.WebStack" {
+        graph [
+          label = "WebStack",
+          labelloc = "b",
+          labeljust = "l",
+          margin = "10",
+          fontsize = "16",
+          penwidth = "2",
+          pencolor = "#888888",
+          style = "filled,rounded",
+          fillcolor = "#e4e4e4",
+        ];
+        "WebStack/SiteBucket" [
+          label = " SiteBucket",
+          fontsize = 12,
+          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Storage/64/Arch_Amazon-S3-Standard_64@5x.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 2,
+          height = 2.266,
+        ];
+        "WebStack/CloudFrontOAI" [
+          label = " CloudFrontOAI",
+          fontsize = 12,
+          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Resource/Res_Security-Identity-and-Compliance/Res_48_Dark/Res_AWS-Identity-Access-Management_Permissions_48_Dark_gen.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 2,
+          height = 2.266,
+        ];
+        "WebStack/SiteDistribution/CFDistribution" [
+          label = " CloudFront\nDistribution\nCFDistribution",
+          fontsize = 12,
+          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Networking-Content/64/Arch_Amazon-CloudFront_64@5x.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 2,
+          height = 2.6979999999999995,
+        ];
+      }
     }
   }
   "AuthStack/UserPoolClient" -> "AuthStack/UserPool" [
@@ -474,6 +526,15 @@ digraph "Diagram" {
     dir = "both",
   ];
   "ProcessingStack/s3Bucket/AllowBucketNotificationsToProcessingStackTriggerStepFunctionLambda115AA170" -> "ProcessingStack/TriggerStepFunctionLambda" [
+    dir = "both",
+  ];
+  "WebStack/SiteBucket" -> "WebStack/CloudFrontOAI" [
+    dir = "both",
+  ];
+  "WebStack/SiteDistribution/CFDistribution" -> "WebStack/SiteBucket" [
+    dir = "both",
+  ];
+  "WebStack/SiteDistribution/CFDistribution" -> "WebStack/CloudFrontOAI" [
     dir = "both",
   ];
 }
