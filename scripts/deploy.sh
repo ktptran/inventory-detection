@@ -20,6 +20,9 @@ cd $SCRIPT_DIR/../cdk
 cdk synth
 cdk deploy --all --require-approval never
 
+# Deploy rekognition
+. $SCRIPT_DIR/launch-custom-model.sh
+
 # Retrieve frontend configurations for aws-exports
 AMPLIFY_EXPORT=$SCRIPT_DIR/../frontend/src/aws-exports.js
 cp $SCRIPT_DIR/../frontend/src/aws-exports.js.template $AMPLIFY_EXPORT
@@ -36,9 +39,6 @@ sed -i -e "s/%REGION%/$COGNITO_REGION/g" $AMPLIFY_EXPORT
 sed -i -e "s/%COGNITO_USER_POOL_ID%/$COGNITO_USER_POOL/g" $AMPLIFY_EXPORT
 sed -i -e "s/%COGNITO_USER_POOL_WEB_CLIENT_ID%/$COGNITO_USER_POOL_WEB_CLIENT/g" $AMPLIFY_EXPORT
 sed -i -e "s,%API_ENDPOINT%,$HTTP_API_ENDPOINT,g" $AMPLIFY_EXPORT
-
-# Deploy rekognition
-. $SCRIPT_DIR/launch-custom-model.sh
 
 # Deploy frontend to S3 bucket
 BUCKET_NAME=$(aws cloudformation describe-stacks --stack-name WebStack --query 'Stacks[0].Outputs[?OutputKey==`SiteBucketName`].OutputValue' --output text)

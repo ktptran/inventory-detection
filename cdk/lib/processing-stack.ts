@@ -7,11 +7,8 @@ export class ProcessingStack extends cdk.Stack {
 	constructor(scope: Construct, id: string, props?: any) {
 		super(scope, id, props);
 
-		const { projectName, environment, accountId, region } = props;
-
-		const bucketName = `${environment}-${projectName}-${accountId}-${region}-bucket`;
-		const databaseName = `${environment}-${projectName}-db`;
-		const tableName = `${environment}-${projectName}-table`;
+		const { projectName, environment, accountId, region, database, table } =
+			props;
 
 		const imageRekognitionRole = new cdk.aws_iam.Role(
 			this,
@@ -52,7 +49,7 @@ export class ProcessingStack extends cdk.Stack {
 			new PolicyStatement({
 				effect: cdk.aws_iam.Effect.ALLOW,
 				resources: [
-					`arn:aws:timestream:${region}:${this.account}:database/${databaseName}/table/${tableName}`,
+					`arn:aws:timestream:${region}:${this.account}:database/${database.databaseName}/table/${table.tableName}`,
 				],
 				actions: ["timestream:WriteRecords"],
 			})
@@ -75,8 +72,8 @@ export class ProcessingStack extends cdk.Stack {
 				runtime: cdk.aws_lambda.Runtime.PYTHON_3_12,
 				role: timestreamRole,
 				environment: {
-					DATABASE_NAME: `${environment}-${projectName}-db`,
-					TABLE_NAME: `${environment}-${projectName}-table`,
+					DATABASE_NAME: database.databaseName,
+					TABLE_NAME: table.tableName,
 				},
 			}
 		);

@@ -3,7 +3,7 @@
 # Environment variables
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 echo "Script directory: $SCRIPT_DIR"
-bash $SCRIPT_DIR/env.sh
+. $SCRIPT_DIR/env.sh
 
 # Pulling S3 bucket name
 BUCKET_NAME=$(aws cloudformation describe-stacks --stack-name StorageStack --query 'Stacks[0].Outputs[?OutputKey==`ImageBucket`].OutputValue' --output text)
@@ -35,6 +35,10 @@ DATASET_TRAIN_ARN=$(aws rekognition create-dataset \
     --dataset-source "{ \"GroundTruthManifest\": { \"S3Object\": { \"Bucket\": \"$BUCKET_NAME\", \"Name\": \"images/training/train/output.manifest\" } } }" \
     --query DatasetArn \
     --output text)
+
+# Pause to wait to create project version
+sleep 15
+echo "Project ARN: $PROJECT_ARN, Dataset test ARN: $DATASET_TEST_ARN, Dataset train ARN: $DATASET_TRAIN_ARN"
 
 # Create new project version
 echo "Creating project version..."

@@ -19,9 +19,6 @@ export class ApiStack extends cdk.Stack {
 		} = props;
 
 		const bucketName = `${environment}-${projectName}-${accountId}-${region}-bucket`;
-		const databaseName = `${environment}-${projectName}-db`;
-		const tableName = `${environment}-${projectName}-table`;
-		const positTableName = `${environment}-${projectName}-positTable`;
 
 		// API Gateway
 		const authorizer = new HttpUserPoolAuthorizer("UserAuthorizer", userPool);
@@ -88,7 +85,7 @@ export class ApiStack extends cdk.Stack {
 			new cdk.aws_iam.PolicyStatement({
 				effect: cdk.aws_iam.Effect.ALLOW,
 				resources: [
-					`arn:aws:timestream:${region}:${this.account}:database/${databaseName}/table/${tableName}`,
+					`arn:aws:timestream:${region}:${this.account}:database/${database.databaseName}/table/${table.tableName}`,
 				],
 				actions: [
 					"timestream:Select",
@@ -133,8 +130,8 @@ export class ApiStack extends cdk.Stack {
 				handler: "get_inventory.handler",
 				runtime: lambda.Runtime.PYTHON_3_12,
 				environment: {
-					TABLE_NAME: tableName,
-					DATABASE_NAME: databaseName,
+					TABLE_NAME: table.tableName,
+					DATABASE_NAME: database.databaseName,
 					BUCKET_NAME: bucketName,
 				},
 				role: getInventoryRole,

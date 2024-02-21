@@ -26,6 +26,10 @@ new ApiStack(app, "ApiStack", {
 	userPool: authStack.userPool,
 });
 
-new ProcessingStack(app, "ProcessingStack", { ...envVariables });
+new ProcessingStack(app, "ProcessingStack", {
+	database: storageStack.database,
+	table: storageStack.table,
+	...envVariables,
+});
 
 new WebStack(app, "WebStack", { ...envVariables });

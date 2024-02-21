@@ -39,9 +39,9 @@ Run the following command to build and deploy the inventory detection applicatio
 Then run the following command to create a user with a given username and password:
 
 ```bash
-USERNAME='test'
+USER='test3'
 PASSWORD='ExamplePassword123!'
-./scripts/create-user.sh $USERNAME $PASSWORD
+./scripts/create-user.sh $USER $PASSWORD
 ```
 
 ### Teardown
