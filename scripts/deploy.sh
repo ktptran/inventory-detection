@@ -37,6 +37,12 @@ sed -i -e "s/%COGNITO_USER_POOL_ID%/$COGNITO_USER_POOL/g" $AMPLIFY_EXPORT
 sed -i -e "s/%COGNITO_USER_POOL_WEB_CLIENT_ID%/$COGNITO_USER_POOL_WEB_CLIENT/g" $AMPLIFY_EXPORT
 sed -i -e "s,%API_ENDPOINT%,$HTTP_API_ENDPOINT,g" $AMPLIFY_EXPORT
 
+# Deploy rekognition
+# bash $SCRIPT_DIR/rekognition-data.sh
+
+# Deploy frontend to S3 bucket
+# TODO: Create CDK and deploy to frontend
+
 # Return to root project directory
 echo "Changing back to root project directory"
 cd $SCRIPT_DIR/../

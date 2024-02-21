@@ -17,7 +17,7 @@ aws rekognition delete-dataset --dataset-arn
 # Delete rekognition project
 aws rekognition delete-project --project-arn $PROJECT_ARN
 
-# Deploy CDK
+# Destroy CDK
 echo "Tearing down CDK application..."
 cd $SCRIPT_DIR/../cdk
 cdk destroy --all --force
