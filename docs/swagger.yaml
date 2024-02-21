@@ -41,12 +41,19 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
-  /image/{key_name}:
+  /image/{keyName}:
     get:
       tags:
         - Image
-      summary: Get image with key name
+      summary: Get S3 image with key name
       operationId: getImage
+      parameters:
+        - in: path
+          name: keyName
+          schema:
+            type: string
+          required: true
+          description: UUID key value of S3 object
       responses:
         "200":
           description: Successful operation
@@ -74,45 +81,12 @@ paths:
       description: Creating a new image when closing the fridge
       operationId: putImage
       requestBody:
-        description: Created put object
+        description: Request for inputting image
+        required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Image"
-      responses:
-        "200":
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApiResponse"
-        "400":
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApiResponse"
-        "500":
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApiResponse"
-
-    post:
-      tags:
-        - Image
-      summary: Create image
-      description: Creating a new image when closing the fridge
-      operationId: putImage
-      security:
-        - BasicAuth: [write]
-      requestBody:
-        description: Created put object
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Image"
+              $ref: "#/components/schemas/PutImage"
       responses:
         "200":
           description: Successful operation
@@ -134,42 +108,16 @@ paths:
                 $ref: "#/components/schemas/ApiResponse"
 
 components:
-  securitySchemes:
-    BasicAuth:
-      type: http
-      scheme: basic
   schemas:
-    Image:
+    PutImage:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-          example: 10
-        createdAt:
+        image:
           type: string
-          example: 2006-10-25T14:30:59Z
-        name:
+          example: base64 string
+        uuid:
           type: string
-          example: Honeycomb Single Beeswax Wrap
-        sku:
-          type: string
-          example: HNY-S
-        category:
-          $ref: "#/components/schemas/Category"
-        stockStatus:
-          type: boolean
-          example: true
-        inStock:
-          type: number
-          example: 599.425
-        availableStock:
-          type: number
-          example: 487.425
-        tags:
-          type: array
-          items:
-            $ref: "#/components/schemas/Tag"
+          example: 0757641b-a43d-47f9-985c-585f53046c79
     ApiResponse:
       type: object
       properties:
