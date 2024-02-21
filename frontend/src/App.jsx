@@ -41,7 +41,7 @@ function App() {
       <Routes>
         <Route path="/refrigerator" element={<Refrigerator />} />
         <Route path="/inventory" element={<Inventory />} />
-        <Route path="/login" element={<Login setUser={setUser} />} />
+        <Route path="/" element={<Login setUser={setUser} />} />
         <Route path="*" element={<NoMatch />} />
       </Routes>
       {user && <Footer />}

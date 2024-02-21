@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
+import Logout from '@mui/icons-material/Logout';
+import MenuIcon from '@mui/icons-material/Menu';
+import PersonIcon from '@mui/icons-material/Person';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
+import ListItemIcon from '@mui/material/ListItemIcon';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import Divider from '@mui/material/Divider';
+import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
-import Logout from '@mui/icons-material/Logout';
-import PersonIcon from '@mui/icons-material/Person';
+import Typography from '@mui/material/Typography';
+import React, { useState } from 'react';
 
-import { useNavigate } from 'react-router-dom';
 import { signOut } from 'aws-amplify/auth';
+import { useNavigate } from 'react-router-dom';
 
 export default function NavBar({ setIsDrawerOpen, setUser }) {
   return (
@@ -51,7 +51,7 @@ function AccountMenu({ setUser }) {
     try {
       await signOut();
       setUser(null);
-      navigate('/login');
+      navigate('/');
     } catch (error) {
       console.log('error signing out: ', error);
     }

@@ -41,7 +41,9 @@ sed -i -e "s,%API_ENDPOINT%,$HTTP_API_ENDPOINT,g" $AMPLIFY_EXPORT
 # bash $SCRIPT_DIR/rekognition-data.sh
 
 # Deploy frontend to S3 bucket
-# TODO: Create CDK and deploy to frontend
+BUCKET_NAME=$(aws cloudformation describe-stacks --stack-name WebStack --query 'Stacks[0].Outputs[?OutputKey==`SiteBucketName`].OutputValue' --output text)
+cd $SCRIPT_DIR/../frontend/ && npm run build
+aws s3 cp $SCRIPT_DIR/../frontend/build s3://$BUCKET_NAME/ --recursive
 
 # Return to root project directory
 echo "Changing back to root project directory"
