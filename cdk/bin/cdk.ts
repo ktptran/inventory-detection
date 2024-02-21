@@ -1,10 +1,11 @@
 #!/usr/bin/env node
-import "source-map-support/register";
 import * as cdk from "aws-cdk-lib";
-import { AuthStack } from "../lib/auth-stack";
+import "source-map-support/register";
 import { ApiStack } from "../lib/api-stack";
-import { StorageStack } from "../lib/storage-stack";
+import { AuthStack } from "../lib/auth-stack";
 import { ProcessingStack } from "../lib/processing-stack";
+import { StorageStack } from "../lib/storage-stack";
+import { WebStack } from "../lib/web-stack";
 
 const envVariables = {
 	environment: process.env["ENV"],
@@ -27,6 +28,4 @@ new ApiStack(app, "ApiStack", {
 
 new ProcessingStack(app, "ProcessingStack", { ...envVariables });
 
-// TODO: WebStack
-// Circular dependencies right now for pulling in data and then deploying
-// new WebStack(app, "WebStack", { ...envVariables });
+new WebStack(app, "WebStack", { ...envVariables });

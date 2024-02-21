@@ -8,9 +8,33 @@ export class WebStack extends cdk.Stack {
 		// Create S3 Bucket for our website
 		const siteBucket = new cdk.aws_s3.Bucket(this, "SiteBucket", {
 			websiteIndexDocument: "index.html",
-			publicReadAccess: true,
+			websiteErrorDocument: "index.html",
+			publicReadAccess: false,
+			autoDeleteObjects: true,
 			removalPolicy: cdk.RemovalPolicy.DESTROY,
 		});
+
+		const cloudfrontOAI = new cdk.aws_cloudfront.OriginAccessIdentity(
+			this,
+			"CloudFrontOAI",
+			{
+				comment: "Cloudfront OAI",
+			}
+		);
+
+		siteBucket.addToResourcePolicy(
+			new cdk.aws_iam.PolicyStatement({
+				sid: "s3BucketPublicRead",
+				effect: cdk.aws_iam.Effect.ALLOW,
+				actions: ["s3:GetObject"],
+				resources: [`${siteBucket.bucketArn}/*`],
+				principals: [
+					new cdk.aws_iam.CanonicalUserPrincipal(
+						cloudfrontOAI.cloudFrontOriginAccessIdentityS3CanonicalUserId
+					),
+				],
+			})
+		);
 
 		const siteDistribution = new cdk.aws_cloudfront.CloudFrontWebDistribution(
 			this,
@@ -18,14 +42,16 @@ export class WebStack extends cdk.Stack {
 			{
 				originConfigs: [
 					{
-						customOriginSource: {
-							domainName: siteBucket.bucketWebsiteDomainName,
-							originProtocolPolicy:
-								cdk.aws_cloudfront.OriginProtocolPolicy.HTTP_ONLY,
+						s3OriginSource: {
+							s3BucketSource: siteBucket,
+							originAccessIdentity: cloudfrontOAI,
 						},
 						behaviors: [
 							{
 								isDefaultBehavior: true,
+								compress: true,
+								allowedMethods:
+									cdk.aws_cloudfront.CloudFrontAllowedMethods.GET_HEAD_OPTIONS,
 							},
 						],
 					},
@@ -33,9 +59,9 @@ export class WebStack extends cdk.Stack {
 			}
 		);
 
-		new cdk.CfnOutput(this, "ImageBucket", {
+		new cdk.CfnOutput(this, "SiteBucketName", {
 			value: siteBucket.bucketName,
-			description: "Image storage bucket name",
+			description: "Web storage bucket name",
 		});
 
 		new cdk.CfnOutput(this, "CloudFrontDistributionDomainName", {

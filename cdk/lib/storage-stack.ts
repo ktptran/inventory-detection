@@ -16,6 +16,8 @@ export class StorageStack extends cdk.Stack {
 
 		this.bucket = new cdk.aws_s3.Bucket(this, "Bucket", {
 			bucketName,
+			publicReadAccess: false,
+			autoDeleteObjects: true,
 			removalPolicy: cdk.RemovalPolicy.DESTROY,
 		});
 
