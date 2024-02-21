@@ -55,4 +55,10 @@ echo "Project version: $PROJECT_VERSION_ARN completed"
 
 # Update Lambda with project ARN
 echo "Updating rekognition lambda with custom model..."
-# TODO: Update Lambda with model
+LAMBDA_ARN=$(aws cloudformation describe-stacks --stack-name ProcessingStack --query 'Stacks[0].Outputs[?OutputKey==`ImageRekognitionLambdaARN`].OutputValue' --output text)
+UPDATE_COMPLETE=$(aws lambda update-function-configuration \
+    --function-name $LAMBDA_ARN \
+    --environment "{\"Variables\": {\"PROJECT_VERSION_ARN\": \"$PROJECT_VERSION_ARN\", \"BUCKET_NAME\": \"$BUCKET_NAME\"}}"  \
+    --output text)
+echo "Successfully updated Lambda function."
+

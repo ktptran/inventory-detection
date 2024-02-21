@@ -36,10 +36,7 @@ export class ProcessingStack extends cdk.Stack {
 				handler: "image_rekognition.handler",
 				runtime: cdk.aws_lambda.Runtime.PYTHON_3_12,
 				role: imageRekognitionRole,
-				environment: {
-					BUCKET_NAME: `${environment}-${projectName}-${accountId}-${region}-bucket`,
-					PROJECT_VERSION_ARN: "TODO",
-				},
+				// Environment is updated in rekognition-data script.
 			}
 		);
 
@@ -160,6 +157,11 @@ export class ProcessingStack extends cdk.Stack {
 		new cdk.CfnOutput(this, "StateMachineArn", {
 			value: sm.stateMachineArn,
 			description: "State Machine ARN",
+		});
+
+		new cdk.CfnOutput(this, "ImageRekognitionLambdaARN", {
+			value: imageRekognitionLambda.functionArn,
+			description: "Image rekognition Lambda Function ARN",
 		});
 	}
 }

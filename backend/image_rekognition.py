@@ -3,18 +3,23 @@
 import logging
 
 from botocore.exceptions import ClientError
-from utils.rekognition import process_custom_label
+from utils.rekognition import detect_custom_label, process_custom_label
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 def handler(event, context):
+    """Detecting inventory image labels.
+
+    :param event: event from step function
+    :param context: context object from step function
+    :return response: custom label response
+    """
     try:
         logger.info('Detecting custom labels')
         logger.info(f"Event: {event}")
-        # labels = detect_custom_label(event["s3"]["name"])
-        # response = process_custom_label(labels)
-        response = process_custom_label({})
+        labels = detect_custom_label(event["s3"]["name"])
+        response = process_custom_label(labels)
         logger.info(f"Custom labels detected: {response}")
         return response
     except ClientError as e:

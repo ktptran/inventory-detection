@@ -3,11 +3,6 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 echo "Script directory: $SCRIPT_DIR"
 
-# Deploy CDK
-echo "Tearing down CDK application..."
-cd $SCRIPT_DIR/../cdk
-cdk destroy --all --force
-
 # Delete rekognition
 # TODO: Add in query parameter for checking with name
 PROJECT_ARN=$(aws rekognition describe-projects --query 'ProjectDescriptions[*].ProjectArn' --output text)
@@ -21,6 +16,11 @@ aws rekognition delete-dataset --dataset-arn
 aws rekognition delete-dataset --dataset-arn
 # Delete rekognition project
 aws rekognition delete-project --project-arn $PROJECT_ARN
+
+# Deploy CDK
+echo "Tearing down CDK application..."
+cd $SCRIPT_DIR/../cdk
+cdk destroy --all --force
 
 # Return to root project directory
 echo "Changing back to root project directory"
