@@ -163,7 +163,7 @@ export class ApiStack extends cdk.Stack {
 
 		httpApi.addRoutes({
 			path: "/image",
-			methods: [apigw.HttpMethod.POST, apigw.HttpMethod.PUT],
+			methods: [apigw.HttpMethod.PUT],
 			integration: imageUploadLambdaProxy,
 		});
 

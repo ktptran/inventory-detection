@@ -7,7 +7,7 @@ async function returnHeaders() {
     Authorization: authToken,
     'Access-Control-Allow-Credentials': true,
     'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'GET, PUT, POST',
+    'Access-Control-Allow-Methods': 'GET, PUT',
     'Access-Control-Allow-Origin': '*',
     'Content-Type': 'application/json',
   };

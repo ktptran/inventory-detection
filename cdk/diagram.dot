@@ -372,6 +372,32 @@ digraph "Diagram" {
           width = 2,
           height = 2.4819999999999998,
         ];
+        "ProcessingStack/s3Bucket/AllowBucketNotificationsToProcessingStackTriggerStepFunctionLambda115AA170" [
+          label = " Lambda Permission",
+          fontsize = 12,
+          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Compute/64/Arch_AWS-Lambda_64@5x.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 1.2,
+          height = 1.466,
+        ];
+        "ProcessingStack/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role" [
+          label = " Role",
+          fontsize = 12,
+          image = "/usr/local/lib/node_modules/cdk-dia/icons/aws/Service/Arch_Security-Identity-Compliance/64/Arch_AWS-Identity-and-Access-Management_64@5x.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 1.2,
+          height = 1.466,
+        ];
       }
     }
   }
@@ -438,10 +464,16 @@ digraph "Diagram" {
   "ProcessingStack/StateMachine" -> "ProcessingStack/smRole" [
     dir = "both",
   ];
+  "ProcessingStack/getInventoryRole" -> "ProcessingStack/StateMachine" [
+    dir = "both",
+  ];
   "ProcessingStack/TriggerStepFunctionLambda" -> "ProcessingStack/StateMachine" [
     dir = "both",
   ];
   "ProcessingStack/TriggerStepFunctionLambda" -> "ProcessingStack/getInventoryRole" [
+    dir = "both",
+  ];
+  "ProcessingStack/s3Bucket/AllowBucketNotificationsToProcessingStackTriggerStepFunctionLambda115AA170" -> "ProcessingStack/TriggerStepFunctionLambda" [
     dir = "both",
   ];
 }
