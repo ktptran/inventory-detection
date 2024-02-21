@@ -36,7 +36,7 @@ DATASET_TRAIN_ARN=$(aws rekognition create-dataset \
     --query DatasetArn \
     --output text)
 
-# Pause to wait to create project version
+# Pause for datasets to render before creating project version
 sleep 15
 echo "Project ARN: $PROJECT_ARN, Dataset test ARN: $DATASET_TEST_ARN, Dataset train ARN: $DATASET_TRAIN_ARN"
 
