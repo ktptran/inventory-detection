@@ -30,10 +30,18 @@ This project provides a proof of concept view of recording down the inventory au
 
 ### Deployment
 
-Run the following command to build and deploy the inventory detection application. Be sure to setup your AWS account using `aws configure`
+Run the following command to build and deploy the inventory detection application. Be sure to setup your AWS account using `aws configure`.
 
 ```bash
 ./scripts/deploy.sh
+```
+
+Then run the following command to create a user with a given username and password:
+
+```bash
+USERNAME='test'
+PASSWORD='ExamplePassword123!'
+./scripts/create-user.sh $USERNAME $PASSWORD
 ```
 
 ### Teardown
