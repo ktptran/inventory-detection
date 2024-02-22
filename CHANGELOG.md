@@ -1,0 +1,87 @@
+- feat: deleting cdk bootstrap
+- feat: removal of cdk bootstrap upon project deletion
+- feat: WAF implementation
+- refact: included interfaces in cdk app
+- bugs: resolved all deployment and successfully deployed and tore down materials
+- bugs: resolved all deployment and successfully deployed and tore down materials
+- feat: correcting deployment scripts
+- feat: bug fixes and noting down future state + demo
+- docs: updated architecture diagram
+- feat: user input for creating user
+- refact: login page is now set as default
+- feat: deployment to cloudfront
+- docs: updated docs and added architecture diagram
+- feat: removed POST method due to redunancy
+- feat: revised swagger file to reflect api gateway schema
+- feat: lambda reconfiguration
+- feat: .gitignore for keeping confidential data
+- feat: swagger ui docs
+- feat: testing dataset and changing training dataset location
+- chore: reverted back to putting into S3 bucket
+- feat: added in training model dataset
+- feat: removed state of items for future features
+- feat: loading indicator
+- feat: pulling in all data for inventory page
+- feat: rendering inventory data on webpage
+- feat: revising auth stack with api gateway
+- feat: added in state for draggable components
+- feat: positioning of materials
+- feat: principle of least privilege on iam policies
+- refact: returning key with associated values for fruits
+- feat: s3 bucket notification
+- chore: uncommented deploying cdk
+- bug: startup page is now login
+- feat: added in new depencies
+- refact: redeployed with new dependencies
+- feat: added in timestream query
+- feat: revised lambda functions to now have working step function
+- chore: linting through python functions
+- feat: rekognition example response input for step function processing
+- feat: lambda functions for step fucntion
+- rebase
+- rebase
+- refact: revised based on input
+- feat: added in getImage
+- feat: adde din testing cases for generating api response for s3 configuration
+- refact: only deploying necessary resources and added lambdaBasicExecutionRole for logging
+- feat: api call still missing cors response to get return item
+- bug: wrong variable name for cognito
+- chore: pushing up all latest changes
+- feat: added cognito authorization to api gateway
+- refact: decoupled environment variables
+- feat: deployment of api stack
+- refact: moved around components to align with stack configuration
+- feat: added permissions
+- feat: blueprint of all functions
+- feat: added in storage stack and api stack
+- feat: cdk-dia for making architecture diagram
+- chore: added in pseudocode for maintaining user state
+- refact: added in sign in functionality
+- refact: refrigerator url
+- feat: stable state
+- feat: exported sample data to file
+- feat: refresh entry
+- feat: updating table count based on clicked value
+- refact: styling
+- refact: styling and adjusting photos
+- chore: refactored translated values and foudn base64 image
+- refact: react-router-dom to prevent user logging out
+- chore: alt linting
+- bug: inspection bugs with icon onClick event now in iconButton onClick
+- refact: added in side drawer
+- feat: icon for logging out mui
+- refasct: user context
+- bug: babel parser error
+- refact: updating css for smaller screens
+- refact: general structure of inventory page
+- feat: baseline configuration of more resources for deployment
+- feat: saving download of image
+- refact: refrigerator door
+- feat: draggable fruits
+- refact: added in x-charts
+- feat: login and logout functionality
+- refact: scripts for creating user and generating default amplify configuration
+- bootstraping frontend
+- bug: babel loader
+- bootstrap
+- Initial commit
