@@ -1,13 +1,20 @@
 import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 
+export interface StorageStackProps extends cdk.StackProps {
+	projectName: string;
+	environment: string;
+	accountId: string;
+	region: string;
+}
+
 export class StorageStack extends cdk.Stack {
 	public bucket: cdk.aws_s3.Bucket;
 	public database: cdk.aws_timestream.CfnDatabase;
 	public table: cdk.aws_timestream.CfnTable;
 	public positionTable: cdk.aws_timestream.CfnTable;
 
-	constructor(scope: Construct, id: string, props?: any) {
+	constructor(scope: Construct, id: string, props: StorageStackProps) {
 		super(scope, id, props);
 
 		const { environment, projectName, accountId, region } = props;

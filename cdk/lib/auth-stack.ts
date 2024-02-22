@@ -1,9 +1,16 @@
 import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 
+export interface AuthStackProps extends cdk.StackProps {
+	projectName: string;
+	environment: string;
+	accountId: string;
+	region: string;
+}
+
 export class AuthStack extends cdk.Stack {
 	public userPool: cdk.aws_cognito.UserPool;
-	constructor(scope: Construct, id: string, props?: any) {
+	constructor(scope: Construct, id: string, props: AuthStackProps) {
 		super(scope, id, props);
 
 		const { projectName } = props;

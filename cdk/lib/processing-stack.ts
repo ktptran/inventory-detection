@@ -3,8 +3,17 @@ import { PolicyStatement } from "aws-cdk-lib/aws-iam";
 import * as sfn from "aws-cdk-lib/aws-stepfunctions";
 import { Construct } from "constructs";
 
+export interface ProcessingStackProps extends cdk.StackProps {
+	projectName: string;
+	environment: string;
+	accountId: string;
+	region: string;
+	database: cdk.aws_timestream.CfnDatabase;
+	table: cdk.aws_timestream.CfnTable;
+}
+
 export class ProcessingStack extends cdk.Stack {
-	constructor(scope: Construct, id: string, props?: any) {
+	constructor(scope: Construct, id: string, props: ProcessingStackProps) {
 		super(scope, id, props);
 
 		const { projectName, environment, accountId, region, database, table } =
@@ -72,8 +81,8 @@ export class ProcessingStack extends cdk.Stack {
 				runtime: cdk.aws_lambda.Runtime.PYTHON_3_12,
 				role: timestreamRole,
 				environment: {
-					DATABASE_NAME: database.databaseName,
-					TABLE_NAME: table.tableName,
+					DATABASE_NAME: database.databaseName ?? "",
+					TABLE_NAME: table.tableName ?? "",
 				},
 			}
 		);

@@ -1,12 +1,23 @@
 import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 
+export interface WebStackProps extends cdk.StackProps {
+	projectName: string;
+	environment: string;
+	accountId: string;
+	region: string;
+	webAcl: cdk.aws_wafv2.CfnWebACL;
+}
+
 export class WebStack extends cdk.Stack {
-	constructor(scope: Construct, id: string, props?: any) {
+	constructor(scope: Construct, id: string, props: WebStackProps) {
 		super(scope, id, props);
+
+		const { projectName, environment, accountId, region, webAcl } = props;
 
 		// Create S3 Bucket for our website
 		const siteBucket = new cdk.aws_s3.Bucket(this, "SiteBucket", {
+			bucketName: `${environment}-${projectName}-${accountId}-${region}-webBucket`,
 			websiteIndexDocument: "index.html",
 			websiteErrorDocument: "index.html",
 			publicReadAccess: false,

@@ -4,8 +4,18 @@ import { HttpUserPoolAuthorizer } from "aws-cdk-lib/aws-apigatewayv2-authorizers
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import { Construct } from "constructs";
 
+export interface ApiStackProps extends cdk.StackProps {
+	projectName: string;
+	environment: string;
+	accountId: string;
+	region: string;
+	database: cdk.aws_timestream.CfnDatabase;
+	table: cdk.aws_timestream.CfnTable;
+	userPool: cdk.aws_cognito.UserPool;
+}
+
 export class ApiStack extends cdk.Stack {
-	constructor(scope: Construct, id: string, props?: any) {
+	constructor(scope: Construct, id: string, props: ApiStackProps) {
 		super(scope, id, props);
 
 		const {
@@ -130,8 +140,8 @@ export class ApiStack extends cdk.Stack {
 				handler: "get_inventory.handler",
 				runtime: lambda.Runtime.PYTHON_3_12,
 				environment: {
-					TABLE_NAME: table.tableName,
-					DATABASE_NAME: database.databaseName,
+					TABLE_NAME: table.tableName ?? "",
+					DATABASE_NAME: database.databaseName ?? "",
 					BUCKET_NAME: bucketName,
 				},
 				role: getInventoryRole,
