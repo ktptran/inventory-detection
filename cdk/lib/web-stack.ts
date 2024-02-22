@@ -17,7 +17,7 @@ export class WebStack extends cdk.Stack {
 
 		// Create S3 Bucket for our website
 		const siteBucket = new cdk.aws_s3.Bucket(this, "SiteBucket", {
-			bucketName: `${environment}-${projectName}-${accountId}-${region}-webBucket`,
+			bucketName: `${environment}-${projectName}-${accountId}-${region}-site`,
 			websiteIndexDocument: "index.html",
 			websiteErrorDocument: "index.html",
 			publicReadAccess: false,
@@ -67,6 +67,7 @@ export class WebStack extends cdk.Stack {
 						],
 					},
 				],
+				webACLId: webAcl.attrArn,
 			}
 		);
 

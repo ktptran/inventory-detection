@@ -13,19 +13,19 @@ export class WebAclStack extends cdk.Stack {
 	constructor(scope: Construct, id: string, props: WebAclStackProps) {
 		super(scope, id, props);
 
-		const { environment, projectName, region } = props;
+		const { projectName, environment } = props;
 
 		this.webAcl = new cdk.aws_wafv2.CfnWebACL(this, "CDKWebAcl", {
 			defaultAction: {
 				allow: {},
 			},
-			scope: "REGIONAL",
+			scope: "CLOUDFRONT",
 			visibilityConfig: {
 				cloudWatchMetricsEnabled: true,
 				metricName: "MetricForWebAclCDK",
 				sampledRequestsEnabled: true,
 			},
-			name: `${environment}-${projectName}-${region}-webAcl`,
+			name: `${environment}-${projectName}-webAcl`,
 			rules: [
 				{
 					name: "CRSRule",

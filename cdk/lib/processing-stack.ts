@@ -10,14 +10,22 @@ export interface ProcessingStackProps extends cdk.StackProps {
 	region: string;
 	database: cdk.aws_timestream.CfnDatabase;
 	table: cdk.aws_timestream.CfnTable;
+	bucket: cdk.aws_s3.Bucket;
 }
 
 export class ProcessingStack extends cdk.Stack {
 	constructor(scope: Construct, id: string, props: ProcessingStackProps) {
 		super(scope, id, props);
 
-		const { projectName, environment, accountId, region, database, table } =
-			props;
+		const {
+			projectName,
+			environment,
+			accountId,
+			region,
+			database,
+			table,
+			bucket,
+		} = props;
 
 		const imageRekognitionRole = new cdk.aws_iam.Role(
 			this,
@@ -153,7 +161,7 @@ export class ProcessingStack extends cdk.Stack {
 		const s3Bucket = cdk.aws_s3.Bucket.fromBucketName(
 			this,
 			"s3Bucket",
-			`${environment}-${projectName}-${accountId}-${region}-bucket`
+			bucket.bucketName ?? ""
 		);
 		s3Bucket.addEventNotification(
 			cdk.aws_s3.EventType.OBJECT_CREATED,
