@@ -51,8 +51,8 @@ CDK_BUCKET=$(aws cloudformation describe-stacks \
     --query 'Stacks[0].Outputs[?OutputKey==`BucketName`].OutputValue' \
     --region us-east-1 \
     --output text)
-aws s3 rm s3://$CDK_BUCKET --recursive
-aws s3 delete-bucket --bucket $CDK_BUCKET
+. $SCRIPT_DIR/delete-s3-object-version.sh --bucket $CDK_BUCKET
+aws s3 rb s3://$CDK_BUCKET
 aws cloudformation delete-stack --stack-name CDKToolkit --region us-east-1
 
 if [ "us-east-1" != "$AWS_REGION" ]; then
@@ -62,8 +62,8 @@ if [ "us-east-1" != "$AWS_REGION" ]; then
         --query 'Stacks[0].Outputs[?OutputKey==`BucketName`].OutputValue' \
         --region $AWS_REGION \
         --output text)
-    aws s3 rm s3://$CDK_BUCKET --recursive
-    aws s3 delete-bucket --bucket $CDK_BUCKET
+    . $SCRIPT_DIR/delete-s3-object-version.sh --bucket $CDK_BUCKET
+    aws s3 rb s3://$CDK_BUCKET
     aws cloudformation delete-stack --stack-name CDKToolkit --region $AWS_REGION
 fi
 

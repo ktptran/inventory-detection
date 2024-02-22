@@ -27,6 +27,7 @@ This project provides a proof of concept view of recording down the inventory au
 - npm >= 10.4.0
 - http-server >= 14.1.1
 - git
+- jq >= 1.7.1
 
 ### Deployment
 
