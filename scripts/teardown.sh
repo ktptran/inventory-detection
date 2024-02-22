@@ -9,10 +9,12 @@ echo "Script directory: $SCRIPT_DIR"
 # Delete rekognition
 PROJECT_ARN=$(aws rekognition describe-projects \
     --region $AWS_REGION \
+    --project-names $PROJECT_NAME \
     --query 'ProjectDescriptions[].ProjectArn' \
     --output text)
 PROJECT_DATASETS=$(aws rekognition describe-projects \
     --region $AWS_REGION \
+    --project-names $PROJECT_NAME \
     --query 'ProjectDescriptions[*].Datasets[*].DatasetArn[]' \
     --output text)
 PROJECT_VERSION_ARN=$(aws rekognition describe-project-versions \

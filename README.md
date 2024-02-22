@@ -109,4 +109,3 @@ The following are implementation bugs for improvements:
 
 1. User state intact when refreshing web console.
 2. Authentication / authorization for API gateway and routes
-3. Teardown script only works if there is only one Rekognition custom model deployed.
