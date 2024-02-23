@@ -35,7 +35,7 @@ cdk synth
 cdk deploy --all --require-approval never
 
 # Deploy rekognition
-# . $SCRIPT_DIR/launch-custom-model.sh
+. $SCRIPT_DIR/launch-custom-model.sh
 
 # Retrieve frontend configurations for aws-exports
 AMPLIFY_EXPORT=$SCRIPT_DIR/../frontend/src/aws-exports.js

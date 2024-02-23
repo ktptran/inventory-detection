@@ -107,5 +107,4 @@ This project can be expanded with the following:
 
 The following are implementation bugs for improvements:
 
-1. User state intact when refreshing web console.
-2. Authentication / authorization for API gateway and routes
+1. Authentication / authorization for API gateway and routes

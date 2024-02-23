@@ -9,6 +9,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
 import { getImage, getInventory } from '../api/apiService';
 
@@ -61,14 +62,18 @@ function Inventory() {
     async function getData() {
       if (data === null) {
         const response = await getInventory();
-        const lastEntry = response[response.length - 1];
-        const sample = createEntrySample(lastEntry);
-        setLatestEntry(lastEntry);
-        setEntryValue(sample);
-        setData(response);
-        const imageUrl = await getImage(lastEntry['key']);
-        setImage(imageUrl);
-        setLoading(false);
+        if (response) {
+          const lastEntry = response[response.length - 1];
+          const sample = createEntrySample(lastEntry);
+          setLatestEntry(lastEntry);
+          setEntryValue(sample);
+          setData(response);
+          const imageUrl = await getImage(lastEntry['key']);
+          setImage(imageUrl);
+          setLoading(false);
+        } else {
+          setLoading(false);
+        }
       }
     }
     getData();
@@ -78,6 +83,17 @@ function Inventory() {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '100px' }}>
         <CircularProgress />
+      </div>
+    );
+  } else if (!loading && !data) {
+    return (
+      <div>
+        <h2 className="flex-center">No data inputted.</h2>
+        <p className="flex-center">
+          Navigate to the&nbsp;
+          <Link to="/refrigerator"> refrigerator page</Link>
+          &nbsp;to create some fruit snapshots.
+        </p>
       </div>
     );
   } else {
