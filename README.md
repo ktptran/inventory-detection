@@ -102,9 +102,3 @@ This project can be expanded with the following:
 1. Rekognition model accuracy = currently there are only 200 images to train the model, but this still produces errors sometimes. Including more images in both the testing and training dataset increases our accuracy. The model images were kept low to save on cost.
 2. IoT ingestion = instead of using a web application, using an IoT camera and services such as AWS IoT Core + AWS IoT GreenGrass would scale this further to a full solution.
 3. Inventory prediction = Using the historical data we can use Amazon Forecast to help predict the inventory of fruits. This can potentially be used to help predict input of stock for larger applications.
-
-### Optimization and Bugs
-
-The following are implementation bugs for improvements:
-
-1. Authentication / authorization for API gateway and routes
