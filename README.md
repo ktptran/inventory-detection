@@ -1,5 +1,7 @@
 # Inventory Detection Service
 
+[First Call Deck](https://github.com/ktptran/inventory-detection/blob/main/docs/first-call-deck/inventory-detection-first-call-deck.pdf)
+
 ## Introduction
 
 Have you ever went to the grocery store and wondered what is in my fridge and what do I have at home?
@@ -71,15 +73,17 @@ With a few entries, navigate to the inventory page through the sidebar. Here you
 
 ### Code Layout
 
-| Path         | Description                                                    |
-| :----------- | :------------------------------------------------------------- |
-| backend/     | source code for Python backend                                 |
-| cdk/         | AWS CDK source code                                            |
-| docs/        | Swagger UI documentation of API                                |
-| frontend/    | source code for React frontend                                 |
-| model-data/  | data for Amazon Rekognition training and test datasets         |
-| scripts/     | shell scripts to build, deploy, and interact with the project. |
-| docs/assets/ | supporting assets for documentation.                           |
+| Path                 | Description                                                    |
+| :------------------- | :------------------------------------------------------------- |
+| backend/             | source code for Python backend                                 |
+| cdk/                 | AWS CDK source code                                            |
+| docs/assets          | Demo assets and architecture diagram                           |
+| docs/swagger         | Swagger UI documentation of API                                |
+| docs/first-call-deck | First Call Deck                                                |
+| frontend/            | source code for React frontend                                 |
+| model-data/          | data for Amazon Rekognition training and test datasets         |
+| scripts/             | shell scripts to build, deploy, and interact with the project. |
+| docs/assets/         | supporting assets for documentation.                           |
 
 ### Architecture Diagram
 
@@ -101,4 +105,4 @@ This project can be expanded with the following:
 
 1. Rekognition model accuracy = currently there are only 200 images to train the model, but this still produces errors sometimes. Including more images in both the testing and training dataset increases our accuracy. The model images were kept low to save on cost.
 2. IoT ingestion = instead of using a web application, using an IoT camera and services such as AWS IoT Core + AWS IoT GreenGrass would scale this further to a full solution.
-3. Inventory prediction = Using the historical data we can use Amazon Forecast to help predict the inventory of fruits. This can potentially be used to help predict input of stock for larger applications.
+3. Inventory prediction = Using the historical data we can use Amazon Forecast to help predict the inventory of fruits. This can then use predictive modeling to figure out what inventory we have lesser amounts for us to include in our weekly operations.

@@ -54,7 +54,7 @@ export class ApiStack extends cdk.Stack {
 				],
 				allowOrigins: ["*"],
 			},
-			defaultAuthorizer: authorizer,
+			// defaultAuthorizer: authorizer,
 		});
 
 		/**
